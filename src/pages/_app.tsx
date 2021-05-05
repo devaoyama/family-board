@@ -11,6 +11,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           domain={process.env.REACT_APP_AUTH0_DOMAIN!}
           clientId={process.env.REACT_APP_AUTH0_CLIENT_ID!}
           redirectUri={window.location.origin}
+          audience={"https://hasura.io/learn"}
         >
           <Component {...pageProps} />
         </Auth0Provider>
