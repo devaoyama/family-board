@@ -1,14 +1,9 @@
 import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { RequiredLogin } from "src/components/common/RequiredLogin";
 
 export default function Home() {
-  const {
-    isAuthenticated,
-    isLoading,
-    loginWithRedirect,
-    logout,
-    getAccessTokenSilently,
-  } = useAuth0();
+  const { isAuthenticated, logout, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -18,24 +13,16 @@ export default function Home() {
     }
   }, [isAuthenticated]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <React.Fragment>
+    <RequiredLogin>
       <div>Hello Next.js!</div>
-      {isAuthenticated ? (
-        <button
-          onClick={() => {
-            logout();
-          }}
-        >
-          ログアウト
-        </button>
-      ) : (
-        <button onClick={loginWithRedirect}>ログイン</button>
-      )}
-    </React.Fragment>
+      <button
+        onClick={() => {
+          logout();
+        }}
+      >
+        ログアウト
+      </button>
+    </RequiredLogin>
   );
 }
