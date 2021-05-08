@@ -6,6 +6,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import GroupIcon from "@material-ui/icons/Group";
 import AppBar from "@material-ui/core/AppBar";
+import Link from "next/link";
 
 type Props = {
   onOpenDrawer: () => void;
@@ -19,7 +20,9 @@ export const MyAppBar: React.FC<Props> = ({ onOpenDrawer }) => {
           <MenuIcon />
         </IconButton>
         <Box mx={"auto"}>
-          <Typography variant="h6">ファミリーボード</Typography>
+          <Link href={"/"}>
+            <Typography variant="h6">ファミリーボード</Typography>
+          </Link>
         </Box>
         <IconButton edge="end" color="inherit" aria-label="menu">
           <GroupIcon />
