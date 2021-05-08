@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { useAuth0 } from "@auth0/auth0-react";
+import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const cache = new InMemoryCache();
-const httpLink = createHttpLink({
+const httpLink = new HttpLink({
   uri: `${process.env.NEXT_PUBLIC_BACKEND_URL}/graphql`,
 });
 
@@ -26,7 +26,7 @@ export const Apollo: React.FC = ({ children }) => {
     });
 
     return new ApolloClient({
-      link: authLink.concat(httpLink),
+      link: from([authLink, httpLink]),
       cache,
     });
   }, [isAuthenticated]);
