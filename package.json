@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
-    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --fix ."
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --fix .",
+    "schemagen": "apollo client:download-schema",
+    "typegen": "apollo client:codegen --globalTypesFile=./src/__generated__/globalTypes.ts --target=typescript --localSchemaFile=schema.json",
+    "typegen:watch": "apollo client:codegen --globalTypesFile=./src/__generated__/globalTypes.ts --target=typescript --localSchemaFile=schema.json --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.3.16",
@@ -15,6 +18,8 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
+    "apollo": "^2.33.1",
+    "dotenv": "^9.0.1",
     "graphql": "^15.5.0",
     "next": "10.2.0",
     "react": "17.0.2",
