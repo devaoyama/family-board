@@ -3,7 +3,7 @@ import { gql } from "@apollo/client/core";
 import { useCallback } from "react";
 
 const CREATE_FAMILY_MUTATION = gql`
-  mutation($input: families_insert_input!) {
+  mutation CreateFamilyMutation($input: families_insert_input!) {
     insert_families_one(object: $input) {
       id
     }

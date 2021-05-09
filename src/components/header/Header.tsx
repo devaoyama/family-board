@@ -7,7 +7,7 @@ import { useDrawer } from "src/hooks/header/useDrawer";
 import { LoadingSpinner } from "src/components/common/LoadingSpinner";
 
 const HEADER_QUERY = gql`
-  query {
+  query HeaderQuery {
     families {
       id
       name
