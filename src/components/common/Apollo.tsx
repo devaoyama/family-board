@@ -15,7 +15,7 @@ export const Apollo: React.FC = ({ children }) => {
     const authLink = setContext(async (_, { headers }) => {
       let token = "";
       if (isAuthenticated) {
-        token = await getAccessTokenSilently({ audience: "https://hasura.io/learn" });
+        token = await getAccessTokenSilently();
       }
       return {
         headers: {

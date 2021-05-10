@@ -14,6 +14,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           domain={process.env.REACT_APP_AUTH0_DOMAIN!}
           clientId={process.env.REACT_APP_AUTH0_CLIENT_ID!}
           redirectUri={window.location.origin}
+          audience={"https://family-board.app/login"}
         >
           <Apollo>
             <Component {...pageProps} />
