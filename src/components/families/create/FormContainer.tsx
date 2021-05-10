@@ -38,7 +38,14 @@ export const FormContainer: React.FC = () => {
   const classes = useStyles();
 
   const onClickCreateFamily = handleSubmit(async (data) => {
-    await createFamily({ input: data });
+    await createFamily({
+      input: {
+        name: data.name,
+        family_users: {
+          data: [{}],
+        },
+      },
+    });
   });
 
   return (

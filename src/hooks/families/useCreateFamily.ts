@@ -15,6 +15,13 @@ const CREATE_FAMILY_MUTATION = gql`
   }
 `;
 
+const NEW_FAMILY_FRAGMENT = gql`
+  fragment NewFamilyFragment on families {
+    id
+    name
+  }
+`;
+
 type Args = {
   onCreateFamily: () => void;
   onCreateFamilyError: () => void;
@@ -37,12 +44,7 @@ export const useCreateFamily = ({
             families(existingFamilies = []) {
               const newFamilyRef = cache.writeFragment({
                 data: data?.insert_families_one,
-                fragment: gql`
-                  fragment NewFamily on families {
-                    id
-                    name
-                  }
-                `,
+                fragment: NEW_FAMILY_FRAGMENT,
               });
               return [...existingFamilies, newFamilyRef];
             },
