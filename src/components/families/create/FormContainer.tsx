@@ -38,7 +38,7 @@ export const FormContainer: React.FC = () => {
   const classes = useStyles();
 
   const onClickCreateFamily = handleSubmit(async (data) => {
-    await createFamily(data);
+    await createFamily({ input: data });
   });
 
   return (
