@@ -5,6 +5,7 @@ import { MyAppBar } from "src/components/header/MyAppBar";
 import { HeaderDrawer } from "src/components/header/HeaderDrawer";
 import { useDrawer } from "src/hooks/header/useDrawer";
 import { LoadingSpinner } from "src/components/common/LoadingSpinner";
+import { HeaderQuery } from "src/components/header/__generated__/HeaderQuery";
 
 const HEADER_QUERY = gql`
   query HeaderQuery {
@@ -16,14 +17,14 @@ const HEADER_QUERY = gql`
 `;
 
 export const Header: React.FC = () => {
-  const { data, loading } = useQuery(HEADER_QUERY);
+  const { data, loading } = useQuery<HeaderQuery>(HEADER_QUERY);
   const drawer = useDrawer();
 
   return (
     <React.Fragment>
       <MyAppBar onOpenDrawer={drawer.open} />
       <HeaderDrawer
-        families={loading ? [] : data.families}
+        families={loading ? [] : data?.families || []}
         isOpen={drawer.isOpen}
         onClose={drawer.close}
       />

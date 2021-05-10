@@ -1,6 +1,10 @@
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client/core";
 import { useCallback } from "react";
+import {
+  CreateFamilyMutation,
+  CreateFamilyMutationVariables,
+} from "src/hooks/families/__generated__/CreateFamilyMutation";
 
 const CREATE_FAMILY_MUTATION = gql`
   mutation CreateFamilyMutation($input: families_insert_input!) {
@@ -10,30 +14,23 @@ const CREATE_FAMILY_MUTATION = gql`
   }
 `;
 
-type TFamiliesInsertInput = {
-  name: string;
-};
-
 type Args = {
   onCreateFamily: () => void;
   onCreateFamilyError: () => void;
 };
 
 type TUseCreateFamily = {
-  createFamily: (input: TFamiliesInsertInput) => void;
+  createFamily: (variables: CreateFamilyMutationVariables) => void;
 };
 
 export const useCreateFamily = ({
   onCreateFamily,
   onCreateFamilyError,
 }: Args): TUseCreateFamily => {
-  const [createFamilyMutation] = useMutation(CREATE_FAMILY_MUTATION);
+  const [createFamilyMutation] = useMutation<CreateFamilyMutation, CreateFamilyMutationVariables>(CREATE_FAMILY_MUTATION);
 
   const createFamily = useCallback(
-    async (input: TFamiliesInsertInput) => {
-      const variables = {
-        input,
-      };
+    async (variables: CreateFamilyMutationVariables) => {
       await createFamilyMutation({ variables })
         .then(() => {
           onCreateFamily();
