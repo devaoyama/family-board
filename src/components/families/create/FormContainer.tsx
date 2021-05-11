@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type FormData = {
+  nickname: string;
   name: string;
 };
 
@@ -41,8 +42,16 @@ export const FormContainer: React.FC = () => {
     await createFamily({
       input: {
         name: data.name,
-        family_users: {
-          data: [{}],
+        family_members: {
+          data: [
+            {
+              member: {
+                data: {
+                  name: data.nickname,
+                },
+              },
+            },
+          ],
         },
       },
     });
@@ -50,6 +59,25 @@ export const FormContainer: React.FC = () => {
 
   return (
     <div className={classes.form}>
+      <Controller
+        name="nickname"
+        control={control}
+        defaultValue=""
+        rules={{ required: "ニックネームは必須です。" }}
+        render={({ field: { onChange, value } }) => (
+          <TextField
+            type="text"
+            label="あなたのニックネーム"
+            value={value}
+            onChange={onChange}
+            error={Boolean(errors.nickname)}
+            helperText={errors.nickname?.message}
+            required
+            fullWidth
+            margin="normal"
+          />
+        )}
+      />
       <Controller
         name="name"
         control={control}
