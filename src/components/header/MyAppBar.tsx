@@ -9,10 +9,12 @@ import AppBar from "@material-ui/core/AppBar";
 import Link from "next/link";
 
 type Props = {
+  name: string | undefined;
   onOpenDrawer: () => void;
+  onOpenMemberDrawer: () => void;
 };
 
-export const MyAppBar: React.FC<Props> = ({ onOpenDrawer }) => {
+export const MyAppBar: React.FC<Props> = ({ name, onOpenDrawer, onOpenMemberDrawer }) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -21,10 +23,10 @@ export const MyAppBar: React.FC<Props> = ({ onOpenDrawer }) => {
         </IconButton>
         <Box mx={"auto"}>
           <Link href={"/"}>
-            <Typography variant="h6">ファミリーボード</Typography>
+            <Typography variant="h6">{name || "ファミリーボード"}</Typography>
           </Link>
         </Box>
-        <IconButton edge="end" color="inherit" aria-label="menu">
+        <IconButton edge="end" color="inherit" aria-label="menu" onClick={onOpenMemberDrawer}>
           <GroupIcon />
         </IconButton>
       </Toolbar>
