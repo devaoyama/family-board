@@ -6,6 +6,7 @@ import {
   CreateMemberMutationVariables,
 } from "src/hooks/members/__generated__/CreateMemberMutation";
 import { MEMBERS_FRAGMENT } from "src/components/header/MemberListItem";
+import {GetCurrentUserQuery} from "src/hooks/members/__generated__/GetCurrentUserQuery";
 
 const CREATE_MEMBER_MUTATION = gql`
   mutation CreateMemberMutation($input: members_insert_input!) {
@@ -18,7 +19,7 @@ const CREATE_MEMBER_MUTATION = gql`
 `;
 
 const GET_CURRENT_USER_QUERY = gql`
-  query NewGetCurrentUserQuery {
+  query GetCurrentUserQuery {
     get_current_user {
       id
       name
@@ -60,13 +61,13 @@ export const useCreateMember = ({
     CREATE_MEMBER_MUTATION,
     {
       update(cache, { data }) {
-        const currentUser: any = cache.readQuery({ query: GET_CURRENT_USER_QUERY });
+        const currentUser = cache.readQuery<GetCurrentUserQuery>({ query: GET_CURRENT_USER_QUERY });
         const newGetCurrentUser = {
-          ...currentUser.get_current_user[0],
+          ...currentUser?.get_current_user[0],
           current_family: {
-            ...currentUser.get_current_user[0].current_family,
+            ...currentUser?.get_current_user[0].current_family,
             family_members: [
-              ...currentUser.get_current_user[0].current_family.family_members,
+              ...(currentUser?.get_current_user[0].current_family?.family_members || []),
               {
                 member: data?.insert_members_one,
                 __typename: "family_member",
