@@ -51,6 +51,7 @@ export const Header: React.FC = () => {
     <React.Fragment>
       <MyAppBar
         name={data?.get_current_user[0].name}
+        isShowMemberDrawerIcon={Boolean(data?.get_current_user[0].current_family)}
         onOpenDrawer={drawer.open}
         onOpenMemberDrawer={memberDrawer.open}
       />

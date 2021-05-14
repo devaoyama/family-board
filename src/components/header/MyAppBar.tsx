@@ -10,11 +10,12 @@ import Link from "next/link";
 
 type Props = {
   name: string | undefined;
+  isShowMemberDrawerIcon: boolean;
   onOpenDrawer: () => void;
   onOpenMemberDrawer: () => void;
 };
 
-export const MyAppBar: React.FC<Props> = ({ name, onOpenDrawer, onOpenMemberDrawer }) => {
+export const MyAppBar: React.FC<Props> = ({ name, isShowMemberDrawerIcon, onOpenDrawer, onOpenMemberDrawer }) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -26,9 +27,11 @@ export const MyAppBar: React.FC<Props> = ({ name, onOpenDrawer, onOpenMemberDraw
             <Typography variant="h6">{name || "ファミリーボード"}</Typography>
           </Link>
         </Box>
-        <IconButton edge="end" color="inherit" aria-label="menu" onClick={onOpenMemberDrawer}>
-          <GroupIcon />
-        </IconButton>
+        {isShowMemberDrawerIcon && (
+          <IconButton edge="end" color="inherit" aria-label="menu" onClick={onOpenMemberDrawer}>
+            <GroupIcon />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   );
