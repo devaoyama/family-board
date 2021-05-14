@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@apollo/client";
 import { MEMBERS_FRAGMENT } from "./MemberListItem";
@@ -9,7 +9,7 @@ import { useDrawer } from "src/hooks/header/useDrawer";
 import { LoadingSpinner } from "src/components/common/LoadingSpinner";
 import { HeaderMemberDrawer } from "src/components/header/HeaderMemberDrawer";
 import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
-import {useUpdateCurrentFamily} from "src/hooks/users/useUpdateCurrentFamily";
+import { useUpdateCurrentFamily } from "src/hooks/users/useUpdateCurrentFamily";
 
 const HEADER_QUERY = gql`
   query HeaderQuery {
@@ -37,16 +37,10 @@ const HEADER_QUERY = gql`
 `;
 
 export const Header: React.FC = () => {
+  const [fetching, setFetching] = useState<boolean>(false);
   const currentFamily = useContext(CurrentFamilyContext);
   const { data, loading, refetch } = useQuery<HeaderQuery>(HEADER_QUERY);
-  const { updateCurrentFamily } = useUpdateCurrentFamily({
-    onUpdateCurrentFamily: () => {
-      // Todo SuccessToastを追加
-    },
-    onUpdateCurrentFamilyError: () => {
-      // Todo エラーToastを追加
-    },
-  });
+  const { updateCurrentFamily } = useUpdateCurrentFamily({});
   const drawer = useDrawer();
   const memberDrawer = useDrawer();
 
@@ -59,9 +53,12 @@ export const Header: React.FC = () => {
   const onClickFamily = useCallback(
     async (familyId: number) => {
       if (!data?.get_current_user[0].id) return;
+      setFetching(true);
       await updateCurrentFamily(data.get_current_user[0].id, familyId);
       currentFamily.setId(familyId);
       await refetch();
+      setFetching(false);
+      drawer.close();
     },
     [currentFamily, data],
   );
@@ -86,7 +83,7 @@ export const Header: React.FC = () => {
         isOpen={memberDrawer.isOpen}
         onClose={memberDrawer.close}
       />
-      {loading && <LoadingSpinner />}
+      {(loading || fetching) && <LoadingSpinner />}
     </React.Fragment>
   );
 };
