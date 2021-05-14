@@ -10,8 +10,10 @@ import { HeaderQuery_families } from "src/components/header/__generated__/Header
 
 type Props = {
   families: HeaderQuery_families[];
+  currentFamilyId: number;
   isOpen: boolean;
   onClose: () => void;
+  onClickFamily: (familyId: number) => void;
 };
 
 const useStyles = makeStyles({
@@ -20,7 +22,13 @@ const useStyles = makeStyles({
   },
 });
 
-export const HeaderDrawer: React.FC<Props> = ({ families, isOpen, onClose }) => {
+export const HeaderDrawer: React.FC<Props> = ({
+  families,
+  currentFamilyId,
+  isOpen,
+  onClose,
+  onClickFamily,
+}) => {
   const router = useRouter();
   const classes = useStyles();
 
@@ -41,6 +49,8 @@ export const HeaderDrawer: React.FC<Props> = ({ families, isOpen, onClose }) => 
             name={family.name}
             imageSrc={"https://picsum.photos/300/200"}
             memberCount={2}
+            selected={family.id === currentFamilyId}
+            onClickFamily={() => onClickFamily(family.id)}
           />
         ))}
         <CreateFamilyListItem
