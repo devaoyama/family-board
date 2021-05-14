@@ -23,18 +23,18 @@ const NEW_FAMILY_FRAGMENT = gql`
 `;
 
 type Args = {
-  onCreateFamily: () => void;
+  onCreateFamily: (familyId: number | undefined) => void;
   onCreateFamilyError: () => void;
 };
 
-type TUseCreateFamily = {
-  createFamily: (variables: CreateFamilyMutationVariables) => void;
+type UserCreateFamilyProps = {
+  createFamily: (name: string, nickname: string, currentUserId: string) => void;
 };
 
 export const useCreateFamily = ({
   onCreateFamily,
   onCreateFamilyError,
-}: Args): TUseCreateFamily => {
+}: Args): UserCreateFamilyProps => {
   const [createFamilyMutation] = useMutation<CreateFamilyMutation, CreateFamilyMutationVariables>(
     CREATE_FAMILY_MUTATION,
     {
@@ -55,10 +55,27 @@ export const useCreateFamily = ({
   );
 
   const createFamily = useCallback(
-    async (variables: CreateFamilyMutationVariables) => {
+    async (name: string, nickname: string, currentUserId: string) => {
+      const variables: CreateFamilyMutationVariables = {
+        input: {
+          name: name,
+          family_members: {
+            data: [
+              {
+                member: {
+                  data: {
+                    name: nickname,
+                    user_id: currentUserId,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
       await createFamilyMutation({ variables })
-        .then(() => {
-          onCreateFamily();
+        .then((res) => {
+          onCreateFamily(res.data?.insert_families_one?.id);
         })
         .catch(() => {
           onCreateFamilyError();
