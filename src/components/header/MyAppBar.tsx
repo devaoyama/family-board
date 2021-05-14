@@ -15,7 +15,12 @@ type Props = {
   onOpenMemberDrawer: () => void;
 };
 
-export const MyAppBar: React.FC<Props> = ({ name, isShowMemberDrawerIcon, onOpenDrawer, onOpenMemberDrawer }) => {
+export const MyAppBar: React.FC<Props> = ({
+  name,
+  isShowMemberDrawerIcon,
+  onOpenDrawer,
+  onOpenMemberDrawer,
+}) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -24,7 +29,7 @@ export const MyAppBar: React.FC<Props> = ({ name, isShowMemberDrawerIcon, onOpen
         </IconButton>
         <Box mx={"auto"}>
           <Link href={"/"}>
-            <Typography variant="h6">{name || "ファミリーボード"}</Typography>
+            <Typography variant="h6">{name ? `${name} 家` : "ファミリーボード"}</Typography>
           </Link>
         </Box>
         {isShowMemberDrawerIcon && (
