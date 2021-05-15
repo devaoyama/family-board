@@ -39,7 +39,7 @@ export const HEADER_QUERY = gql`
 export const Header: React.FC = () => {
   const [fetching, setFetching] = useState<boolean>(false);
   const currentFamily = useContext(CurrentFamilyContext);
-  const { data, loading, refetch } = useQuery<HeaderQuery>(HEADER_QUERY);
+  const { data, loading } = useQuery<HeaderQuery>(HEADER_QUERY);
   const { updateCurrentFamily } = useUpdateCurrentFamily({});
   const drawer = useDrawer();
   const memberDrawer = useDrawer();
@@ -56,7 +56,6 @@ export const Header: React.FC = () => {
       setFetching(true);
       await updateCurrentFamily(data.get_current_user[0].id, familyId);
       currentFamily.setId(familyId);
-      await refetch();
       setFetching(false);
       drawer.close();
     },

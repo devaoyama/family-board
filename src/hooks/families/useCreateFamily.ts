@@ -51,7 +51,7 @@ export const useCreateFamily = ({
                 id: data?.insert_families_one?.id || 0,
                 name: data?.insert_families_one?.name || "",
                 family_members: [...(data?.insert_families_one?.family_members || [])],
-                __typename: "families"
+                __typename: "families",
               },
             },
           ],
