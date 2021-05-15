@@ -11,7 +11,7 @@ import { HeaderMemberDrawer } from "src/components/header/HeaderMemberDrawer";
 import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 import { useUpdateCurrentFamily } from "src/hooks/users/useUpdateCurrentFamily";
 
-const HEADER_QUERY = gql`
+export const HEADER_QUERY = gql`
   query HeaderQuery {
     get_current_user {
       id

@@ -16,12 +16,12 @@ const UPDATE_CURRENT_FAMILY = gql`
 `;
 
 type Args = {
-  onUpdateCurrentFamily: () => void;
-  onUpdateCurrentFamilyError: () => void;
+  onUpdateCurrentFamily?: () => void;
+  onUpdateCurrentFamilyError?: () => void;
 };
 
 type UpdateCurrentFamilyProps = {
-  updateCurrentFamily: (userId: string, familyId: number) => void;
+  updateCurrentFamily: (userId: string, familyId: number) => Promise<void>;
 };
 
 export const useUpdateCurrentFamily = ({
@@ -40,9 +40,11 @@ export const useUpdateCurrentFamily = ({
       };
       await updateCurrentFamilyMutation({ variables })
         .then(() => {
+          if (onUpdateCurrentFamily === undefined) return;
           onUpdateCurrentFamily();
         })
         .catch(() => {
+          if (onUpdateCurrentFamilyError === undefined) return;
           onUpdateCurrentFamilyError();
         });
     },
