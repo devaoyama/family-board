@@ -9,9 +9,17 @@ type Props = {
   name: string;
   imageSrc: string;
   memberCount: number;
+  selected: boolean;
+  onClickFamily: () => void;
 };
 
-export const FamilyListItem: React.FC<Props> = ({ name, imageSrc, memberCount }) => {
+export const FamilyListItem: React.FC<Props> = ({
+  name,
+  imageSrc,
+  memberCount,
+  selected,
+  onClickFamily,
+}) => {
   const list: React.ReactNodeArray = [];
 
   for (let i = 0; i < memberCount; i++) {
@@ -19,7 +27,7 @@ export const FamilyListItem: React.FC<Props> = ({ name, imageSrc, memberCount })
   }
 
   return (
-    <ListItem button>
+    <ListItem button selected={selected} onClick={onClickFamily}>
       <ListItemAvatar>
         <Avatar variant={"rounded"} alt="ファミリーのプロフィール画像" src={imageSrc} />
       </ListItemAvatar>
