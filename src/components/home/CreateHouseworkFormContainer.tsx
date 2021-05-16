@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,6 +6,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { Controller, useForm } from "react-hook-form";
+import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
+import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 
 type Props = {
   isOpen: boolean;
@@ -23,12 +25,19 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<FormData>();
+  const currentFamily = useContext(CurrentFamilyContext);
+  const { createHousework } = useCreateHousework({});
 
-  const onClickCreateHousework = () => {
-    // todo 作成ボタンを押したときの処理
-    onClose();
-  };
+  const onClickCreateHousework = useCallback(
+    async (data) => {
+      await createHousework(currentFamily.id, data.title, data.description, parseInt(data.point));
+      reset();
+      onClose();
+    },
+    [currentFamily.id],
+  );
 
   return (
     <React.Fragment>
@@ -94,7 +103,11 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
           <Button onClick={onClose} color="default">
             キャンセル
           </Button>
-          <Button onClick={onClickCreateHousework} color="primary">
+          <Button
+            onClick={handleSubmit(onClickCreateHousework)}
+            disabled={isSubmitting}
+            color="primary"
+          >
             追加
           </Button>
         </DialogActions>
