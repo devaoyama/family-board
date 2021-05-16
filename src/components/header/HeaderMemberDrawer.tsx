@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { useActiveView } from "src/hooks/header/useActiveView";
+import { useActiveView } from "src/hooks/common/useActiveView";
 import { MemberList } from "src/components/header/MemberList";
 import { AddMemberContainer } from "src/components/header/AddMemberContainer";
 import {

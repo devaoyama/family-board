@@ -6,7 +6,7 @@ import {
   CreateMemberMutationVariables,
 } from "src/hooks/members/__generated__/CreateMemberMutation";
 import { MEMBERS_FRAGMENT } from "src/components/header/MemberListItem";
-import {GetCurrentUserQuery} from "src/hooks/members/__generated__/GetCurrentUserQuery";
+import { GetCurrentUserQuery } from "src/hooks/members/__generated__/GetCurrentUserQuery";
 
 const CREATE_MEMBER_MUTATION = gql`
   mutation CreateMemberMutation($input: members_insert_input!) {

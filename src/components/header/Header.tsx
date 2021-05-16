@@ -5,7 +5,7 @@ import { MEMBERS_FRAGMENT } from "./MemberListItem";
 import { HeaderQuery } from "src/components/header/__generated__/HeaderQuery";
 import { MyAppBar } from "src/components/header/MyAppBar";
 import { HeaderDrawer } from "src/components/header/HeaderDrawer";
-import { useDrawer } from "src/hooks/header/useDrawer";
+import { useDrawer } from "src/hooks/common/useDrawer";
 import { LoadingSpinner } from "src/components/common/LoadingSpinner";
 import { HeaderMemberDrawer } from "src/components/header/HeaderMemberDrawer";
 import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
