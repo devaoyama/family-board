@@ -1,20 +1,17 @@
 import { useCallback } from "react";
-import { gql } from "@apollo/client/core";
+import { gql, Reference, StoreObject } from "@apollo/client/core";
 import { useMutation } from "@apollo/client";
 import {
   DeleteHouseworkMutation,
   DeleteHouseworkMutationVariables,
 } from "src/hooks/houseworks/__generated__/DeleteHouseworkMutation";
-import { HOUSEWORKS_FRAGMENT } from "src/components/home/HouseworkListItem";
 
 const DELETE_HOUSEWORK_MUTATION = gql`
   mutation DeleteHouseworkMutation($id: Int!) {
     delete_houseworks_by_pk(id: $id) {
       id
-      ...HouseworksFragment
     }
   }
-  ${HOUSEWORKS_FRAGMENT}
 `;
 
 type Args = {
@@ -33,10 +30,13 @@ export const useDeleteHousework = ({ onDeleteHousework, onDeleteHouseworkError }
   >(DELETE_HOUSEWORK_MUTATION, {
     update(cache, { data }) {
       cache.modify({
-        id: cache.identify({ ...data?.delete_houseworks_by_pk }),
         fields: {
-          houseworks(_, { DELETE }) {
-            return DELETE;
+          houseworks(existingHouseworksRefs = [], { readField }) {
+            return existingHouseworksRefs.filter(
+              (houseworkRef: StoreObject | Reference | undefined) => {
+                return data?.delete_houseworks_by_pk?.id !== readField("id", houseworkRef);
+              },
+            );
           },
         },
       });
