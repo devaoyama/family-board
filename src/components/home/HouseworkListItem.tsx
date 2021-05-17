@@ -24,13 +24,13 @@ export const HOUSEWORKS_FRAGMENT = gql`
 type Props = {
   housework: HouseworksFragment;
   onClickCheckbox: () => void;
-  onClickDeleteButton: () => void;
+  deleteHousework: (id: number) => void;
 };
 
 export const HouseworkListItem: React.FC<Props> = ({
   housework,
   onClickCheckbox,
-  onClickDeleteButton,
+  deleteHousework,
 }) => {
   const { isOpen, open, close } = useDialog();
 
@@ -51,7 +51,10 @@ export const HouseworkListItem: React.FC<Props> = ({
         housework={housework}
         isOpen={isOpen}
         onClose={close}
-        onClickDeleteButton={onClickDeleteButton}
+        onClickDeleteButton={() => {
+          deleteHousework(housework.id);
+          close();
+        }}
       />
     </>
   );

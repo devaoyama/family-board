@@ -20,9 +20,14 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   houseworks: HouseworksFragment[];
   onClickAddHouseworkListItem: () => void;
+  deleteHousework: (id: number) => void;
 };
 
-export const HouseworkList: React.FC<Props> = ({ houseworks, onClickAddHouseworkListItem }) => {
+export const HouseworkList: React.FC<Props> = ({
+  houseworks,
+  onClickAddHouseworkListItem,
+  deleteHousework,
+}) => {
   const classes = useStyles();
 
   return (
@@ -39,10 +44,7 @@ export const HouseworkList: React.FC<Props> = ({ houseworks, onClickAddHousework
               // todo チェックボタンを押した時の処理
               console.log("チェックボックスを押した");
             }}
-            onClickDeleteButton={() => {
-              // todo 削除ボタンを押したときの処理
-              console.log("削除");
-            }}
+            deleteHousework={deleteHousework}
           />
         ))}
         <AddHouseworkListItem onClickAddHouseworkListItem={onClickAddHouseworkListItem} />
