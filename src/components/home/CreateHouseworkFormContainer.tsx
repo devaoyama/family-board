@@ -6,6 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { Controller, useForm } from "react-hook-form";
+import Box from "@material-ui/core/Box";
 import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
 import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 
@@ -103,6 +104,7 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
           <Button onClick={onClose} color="default">
             キャンセル
           </Button>
+          <Box mx="auto" />
           <Button
             onClick={handleSubmit(onClickCreateHousework)}
             disabled={isSubmitting}
