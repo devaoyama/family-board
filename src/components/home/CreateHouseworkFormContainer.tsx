@@ -76,15 +76,17 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
                 onChange={onChange}
                 error={Boolean(errors.description)}
                 helperText={errors.description?.message}
-                fullWidth
                 margin="normal"
+                rows={4}
+                fullWidth
+                multiline
               />
             )}
           />
           <Controller
             name="point"
             control={control}
-            defaultValue=""
+            defaultValue="1"
             render={({ field: { onChange, value } }) => (
               <TextField
                 type="number"
