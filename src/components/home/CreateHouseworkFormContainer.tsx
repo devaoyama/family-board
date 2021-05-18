@@ -27,7 +27,7 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
     control,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<FormData>();
+  } = useForm<FormData>({ defaultValues: { title: "", description: "", point: 1 } });
   const currentFamily = useContext(CurrentFamilyContext);
   const { createHousework } = useCreateHousework({});
 
@@ -48,7 +48,6 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
           <Controller
             name="title"
             control={control}
-            defaultValue=""
             rules={{ required: "タイトルは必須です。" }}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -67,7 +66,6 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
           <Controller
             name="description"
             control={control}
-            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 type="text"
@@ -86,7 +84,6 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
           <Controller
             name="point"
             control={control}
-            defaultValue="1"
             render={({ field: { onChange, value } }) => (
               <TextField
                 type="number"

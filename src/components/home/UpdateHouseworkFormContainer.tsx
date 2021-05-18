@@ -83,7 +83,6 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
           <Controller
             name="title"
             control={control}
-            defaultValue=""
             rules={{ required: "タイトルは必須です。" }}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -102,7 +101,6 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
           <Controller
             name="description"
             control={control}
-            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 type="text"
@@ -121,7 +119,6 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
           <Controller
             name="point"
             control={control}
-            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextField
                 type="number"

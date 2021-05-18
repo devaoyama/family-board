@@ -62,8 +62,8 @@ export const HouseworkListItem: React.FC<Props> = ({
         housework={housework}
         isOpen={updateDialog.isOpen}
         onClose={updateDialog.close}
-        onClickDeleteButton={async () => {
-          await deleteHousework(housework.id);
+        onClickDeleteButton={() => {
+          deleteHousework(housework.id);
           updateDialog.close();
         }}
       />
