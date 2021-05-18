@@ -10,6 +10,7 @@ import { gql } from "@apollo/client/core";
 import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 import { HouseworkDetailDialog } from "src/components/home/HouseworkDetailDialog";
 import { useDialog } from "src/hooks/common/useDialog";
+import { UpdateHouseworkFormContainer } from "src/components/home/UpdateHouseworkFormContainer";
 
 export const HOUSEWORKS_FRAGMENT = gql`
   fragment HouseworksFragment on houseworks {
@@ -24,15 +25,16 @@ export const HOUSEWORKS_FRAGMENT = gql`
 type Props = {
   housework: HouseworksFragment;
   onClickCheckbox: () => void;
-  onClickDeleteButton: () => void;
+  deleteHousework: (id: number) => void;
 };
 
 export const HouseworkListItem: React.FC<Props> = ({
   housework,
   onClickCheckbox,
-  onClickDeleteButton,
+  deleteHousework,
 }) => {
-  const { isOpen, open, close } = useDialog();
+  const detailDialog = useDialog();
+  const updateDialog = useDialog();
 
   return (
     <>
@@ -42,16 +44,28 @@ export const HouseworkListItem: React.FC<Props> = ({
         </ListItemIcon>
         <ListItemText primary={housework.title} />
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="comments" onClick={open}>
+          <IconButton edge="end" aria-label="comments" onClick={detailDialog.open}>
             <CommentIcon />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
       <HouseworkDetailDialog
         housework={housework}
-        isOpen={isOpen}
-        onClose={close}
-        onClickDeleteButton={onClickDeleteButton}
+        isOpen={detailDialog.isOpen}
+        onClose={detailDialog.close}
+        onClickUpdateDialogButton={() => {
+          detailDialog.close();
+          updateDialog.open();
+        }}
+      />
+      <UpdateHouseworkFormContainer
+        housework={housework}
+        isOpen={updateDialog.isOpen}
+        onClose={updateDialog.close}
+        onClickDeleteButton={() => {
+          deleteHousework(housework.id);
+          updateDialog.close();
+        }}
       />
     </>
   );

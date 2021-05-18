@@ -13,6 +13,7 @@ import {
   HouseworksQuery,
   HouseworksQueryVariables,
 } from "src/components/home/__generated__/HouseworksQuery";
+import { useDeleteHousework } from "src/hooks/houseworks/useDeleteHousework";
 
 const HOUSEWORKS_QUERY = gql`
   query HouseworksQuery($familyId: Int!) {
@@ -27,12 +28,12 @@ const HOUSEWORKS_QUERY = gql`
 export const HomeContainer: React.FC = () => {
   const currentFamily = useContext(CurrentFamilyContext);
   const createHouseworkDialog = useDialog();
-
   const { data } = useQuery<HouseworksQuery, HouseworksQueryVariables>(HOUSEWORKS_QUERY, {
     variables: {
       familyId: currentFamily.id || 0,
     },
   });
+  const { deleteHousework } = useDeleteHousework({});
 
   return (
     <>
@@ -42,6 +43,7 @@ export const HomeContainer: React.FC = () => {
           <HouseworkList
             houseworks={data?.houseworks || []}
             onClickAddHouseworkListItem={createHouseworkDialog.open}
+            deleteHousework={deleteHousework}
           />
         </Container>
       ) : (

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,12 +7,27 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { Controller, useForm } from "react-hook-form";
 import Box from "@material-ui/core/Box";
-import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
-import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import { useUpdateHousework } from "src/hooks/houseworks/useUpdateHousework";
+import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
+
+const useStyle = makeStyles((theme) => ({
+  deleteButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+}));
 
 type Props = {
+  housework: HouseworksFragment;
   isOpen: boolean;
   onClose: () => void;
+  onClickDeleteButton: () => void;
 };
 
 type FormData = {
@@ -21,29 +36,49 @@ type FormData = {
   point: number;
 };
 
-export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose }) => {
+export const UpdateHouseworkFormContainer: React.FC<Props> = ({
+  housework,
+  isOpen,
+  onClose,
+  onClickDeleteButton,
+}) => {
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<FormData>({ defaultValues: { title: "", description: "", point: 1 } });
-  const currentFamily = useContext(CurrentFamilyContext);
-  const { createHousework } = useCreateHousework({});
+  } = useForm<FormData>({
+    defaultValues: {
+      title: housework.title,
+      description: housework.description || "",
+      point: housework.point,
+    },
+  });
+  const { updateHousework } = useUpdateHousework({});
+  const classes = useStyle();
 
-  const onClickCreateHousework = useCallback(
+  const onClickUpdateHousework = useCallback(
     async (data) => {
-      await createHousework(currentFamily.id, data.title, data.description, parseInt(data.point));
+      await updateHousework(housework.id, data.title, data.description, parseFloat(data.point));
       reset();
       onClose();
     },
-    [currentFamily.id],
+    [housework.id],
   );
 
   return (
     <React.Fragment>
       <Dialog open={isOpen} onClose={onClose} fullWidth>
-        <DialogTitle>家事を追加</DialogTitle>
+        <DialogTitle disableTypography>
+          <Typography variant={"h6"}>{housework.title}</Typography>
+          <IconButton
+            aria-label="close"
+            onClick={onClickDeleteButton}
+            className={classes.deleteButton}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <Controller
             name="title"
@@ -105,11 +140,11 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
           </Button>
           <Box mx="auto" />
           <Button
-            onClick={handleSubmit(onClickCreateHousework)}
+            onClick={handleSubmit(onClickUpdateHousework)}
             disabled={isSubmitting}
             color="primary"
           >
-            追加
+            更新
           </Button>
         </DialogActions>
       </Dialog>
