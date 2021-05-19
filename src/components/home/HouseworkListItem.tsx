@@ -7,10 +7,11 @@ import IconButton from "@material-ui/core/IconButton";
 import CommentIcon from "@material-ui/icons/Comment";
 import ListItem from "@material-ui/core/ListItem";
 import { gql } from "@apollo/client/core";
-import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 import { HouseworkDetailDialog } from "src/components/home/HouseworkDetailDialog";
 import { useDialog } from "src/hooks/common/useDialog";
 import { UpdateHouseworkFormContainer } from "src/components/home/UpdateHouseworkFormContainer";
+import { DoneHouseworkFormContainer } from "src/components/home/DoneHouseworkFormContainer";
+import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
 
 export const HOUSEWORKS_FRAGMENT = gql`
   fragment HouseworksFragment on houseworks {
@@ -24,15 +25,11 @@ export const HOUSEWORKS_FRAGMENT = gql`
 
 type Props = {
   housework: HouseworksFragment;
-  onClickCheckbox: () => void;
   deleteHousework: (id: number) => void;
 };
 
-export const HouseworkListItem: React.FC<Props> = ({
-  housework,
-  onClickCheckbox,
-  deleteHousework,
-}) => {
+export const HouseworkListItem: React.FC<Props> = ({ housework, deleteHousework }) => {
+  const doneDialog = useDialog();
   const detailDialog = useDialog();
   const updateDialog = useDialog();
 
@@ -40,7 +37,7 @@ export const HouseworkListItem: React.FC<Props> = ({
     <>
       <ListItem key={housework.id}>
         <ListItemIcon>
-          <Checkbox checked={housework.status} onClick={onClickCheckbox} />
+          <Checkbox checked={housework.status} onClick={doneDialog.open} />
         </ListItemIcon>
         <ListItemText primary={housework.title} />
         <ListItemSecondaryAction>
@@ -49,6 +46,7 @@ export const HouseworkListItem: React.FC<Props> = ({
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
+      <DoneHouseworkFormContainer isOpen={doneDialog.isOpen} onClose={doneDialog.close} />
       <HouseworkDetailDialog
         housework={housework}
         isOpen={detailDialog.isOpen}

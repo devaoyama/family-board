@@ -40,10 +40,6 @@ export const HouseworkList: React.FC<Props> = ({
           <HouseworkListItem
             key={housework.id}
             housework={housework}
-            onClickCheckbox={() => {
-              // todo チェックボタンを押した時の処理
-              console.log("チェックボックスを押した");
-            }}
             deleteHousework={deleteHousework}
           />
         ))}
