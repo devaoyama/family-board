@@ -11,6 +11,17 @@ import { HeaderMemberDrawer } from "src/components/header/HeaderMemberDrawer";
 import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 import { useUpdateCurrentFamily } from "src/hooks/users/useUpdateCurrentFamily";
 
+export const CURRENT_FAMILY_MEMBERS_FRAGMENT = gql`
+  fragment CurrentFamilyMembers on family_member {
+    member {
+      id
+      user_id
+      ...MemberFragment
+    }
+  }
+  ${MEMBERS_FRAGMENT}
+`;
+
 export const HEADER_QUERY = gql`
   query HeaderQuery {
     get_current_user {
@@ -20,11 +31,8 @@ export const HEADER_QUERY = gql`
         id
         name
         family_members {
-          member {
-            id
-            user_id
-            ...MemberFragment
-          }
+          member_id
+          ...CurrentFamilyMembers
         }
       }
     }
@@ -33,7 +41,7 @@ export const HEADER_QUERY = gql`
       name
     }
   }
-  ${MEMBERS_FRAGMENT}
+  ${CURRENT_FAMILY_MEMBERS_FRAGMENT}
 `;
 
 export const Header: React.FC = () => {
