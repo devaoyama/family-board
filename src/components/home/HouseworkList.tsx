@@ -3,8 +3,8 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { AddHouseworkListItem } from "src/components/home/AddHouseworkListItem";
-import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 import { HouseworkListItem } from "src/components/home/HouseworkListItem";
+import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
 
 const useStyles = makeStyles((theme) => ({
   title: {
