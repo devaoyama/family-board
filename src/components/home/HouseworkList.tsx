@@ -21,12 +21,14 @@ type Props = {
   houseworks: HouseworksFragment[];
   onClickAddHouseworkListItem: () => void;
   deleteHousework: (id: number) => void;
+  doneHousework: (id: number, status: boolean, memberIds: number[]) => void;
 };
 
 export const HouseworkList: React.FC<Props> = ({
   houseworks,
   onClickAddHouseworkListItem,
   deleteHousework,
+  doneHousework,
 }) => {
   const classes = useStyles();
 
@@ -41,6 +43,7 @@ export const HouseworkList: React.FC<Props> = ({
             key={housework.id}
             housework={housework}
             deleteHousework={deleteHousework}
+            doneHousework={doneHousework}
           />
         ))}
         <AddHouseworkListItem onClickAddHouseworkListItem={onClickAddHouseworkListItem} />

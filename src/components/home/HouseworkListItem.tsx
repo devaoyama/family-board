@@ -26,9 +26,10 @@ export const HOUSEWORKS_FRAGMENT = gql`
 type Props = {
   housework: HouseworksFragment;
   deleteHousework: (id: number) => void;
+  doneHousework: (id: number, status: boolean, memberIds: number[]) => void;
 };
 
-export const HouseworkListItem: React.FC<Props> = ({ housework, deleteHousework }) => {
+export const HouseworkListItem: React.FC<Props> = ({ housework, deleteHousework, doneHousework }) => {
   const doneDialog = useDialog();
   const detailDialog = useDialog();
   const updateDialog = useDialog();
@@ -46,7 +47,12 @@ export const HouseworkListItem: React.FC<Props> = ({ housework, deleteHousework 
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
-      <DoneHouseworkFormContainer isOpen={doneDialog.isOpen} onClose={doneDialog.close} />
+      <DoneHouseworkFormContainer
+        housework={housework}
+        isOpen={doneDialog.isOpen}
+        onClose={doneDialog.close}
+        doneHousework={doneHousework}
+      />
       <HouseworkDetailDialog
         housework={housework}
         isOpen={detailDialog.isOpen}
