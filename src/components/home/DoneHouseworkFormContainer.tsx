@@ -16,9 +16,11 @@ import Box from "@material-ui/core/Box";
 import DialogActions from "@material-ui/core/DialogActions";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
+import { CurrentFamilyMembersQuery_get_current_user_current_family_family_members } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
 
 type Props = {
   housework: HouseworksFragment;
+  members: CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
   isOpen: boolean;
   onClose: () => void;
   doneHousework: (id: number, status: boolean, memberIds: number[]) => void;
@@ -29,19 +31,9 @@ type FormData = {
   memberIds: number[];
 };
 
-const members = [
-  {
-    id: 51,
-    name: "おれ",
-  },
-  {
-    id: 2,
-    name: "きみ",
-  },
-];
-
 export const DoneHouseworkFormContainer: React.FC<Props> = ({
   housework,
+  members,
   isOpen,
   onClose,
   doneHousework,
@@ -97,17 +89,17 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   const selectedMembers = selected.map((id: number) => {
-                    const selectedMember = members.find((member) => member.id === id);
-                    return selectedMember?.name;
+                    const selectedMember = members.find((member) => member.member.id === id);
+                    return selectedMember?.member.name;
                   });
                   return selectedMembers.join(", ");
                 }}
                 multiple
               >
                 {members.map((member) => (
-                  <MenuItem key={member.id} value={member.id}>
-                    <Checkbox checked={value.indexOf(member.id) > -1} />
-                    <ListItemText primary={member.name} />
+                  <MenuItem key={member.member.id} value={member.member.id}>
+                    <Checkbox checked={value.indexOf(member.member.id) > -1} />
+                    <ListItemText primary={member.member.name} />
                   </MenuItem>
                 ))}
               </Select>
