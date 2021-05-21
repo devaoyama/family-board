@@ -16,7 +16,7 @@ const DONE_HOUSEWORK_MUTATION = gql`
       id
       ...HouseworksFragment
     }
-    insert_housework_member(objects: $houseworkMembers) {
+    insert_housework_member(objects: $houseworkMemberInput) {
       affected_rows
     }
   }

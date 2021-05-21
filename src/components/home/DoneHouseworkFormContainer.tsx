@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -38,19 +38,25 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
   onClose,
   doneHousework,
 }) => {
+  const alreadyMemberIds = useMemo((): number[] => {
+    const ids = housework.housework_members.map((houseworkMember) => houseworkMember.member.id);
+    return ids || [];
+  }, [housework]);
+
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<FormData>({
-    defaultValues: { status: housework.status, memberIds: [] },
+    defaultValues: { status: housework.status, memberIds: [...alreadyMemberIds] },
   });
 
   const onClickDoneHousework = useCallback(
     async (data) => {
-      await doneHousework(housework.id, data.status, data.memberIds);
-      reset();
+      const memberIds = data.memberIds.filter((id: number) => {
+        return !alreadyMemberIds.includes(id);
+      });
+      await doneHousework(housework.id, data.status, memberIds);
       onClose();
     },
     [housework.id],

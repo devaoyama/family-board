@@ -21,6 +21,12 @@ export const HOUSEWORKS_FRAGMENT = gql`
     description
     status
     point
+    housework_members {
+      member {
+        id
+        name
+      }
+    }
   }
 `;
 
