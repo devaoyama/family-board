@@ -5,6 +5,7 @@ import {
   CreateMemberMutation,
   CreateMemberMutationVariables,
 } from "src/hooks/members/__generated__/CreateMemberMutation";
+import { UpdateFamilyFragment } from "src/hooks/members/__generated__/UpdateFamilyFragment";
 
 const CREATE_MEMBER_MUTATION = gql`
   mutation CreateMemberMutation($input: members_insert_input!) {
@@ -53,7 +54,7 @@ export const useCreateMember = ({
     CREATE_MEMBER_MUTATION,
     {
       update(cache, { data }) {
-        const family = cache.readFragment({
+        const family = cache.readFragment<UpdateFamilyFragment>({
           id: `families:${currentFamilyId}`,
           fragment: UPDATE_FAMILY_FRAGMENT,
         });
@@ -63,7 +64,7 @@ export const useCreateMember = ({
           data: {
             ...family,
             family_members: [
-              ...family.family_members,
+              ...(family?.family_members || []),
               {
                 member: data?.insert_members_one,
                 __typename: "family_member",

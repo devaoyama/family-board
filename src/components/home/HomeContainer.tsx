@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Container from "@material-ui/core/Container";
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@apollo/client";
@@ -16,6 +16,7 @@ import { useDeleteHousework } from "src/hooks/houseworks/useDeleteHousework";
 import { useDoneHousework } from "src/hooks/houseworks/useDoneHousework";
 import { useFetchCurrentUser } from "src/hooks/users/useFetchCurrentUser";
 import { useFetchFamilies } from "src/hooks/families/useFetchFamilies";
+import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
 
 const HOUSEWORKS_QUERY = gql`
   query HouseworksQuery($familyId: Int!) {
@@ -39,9 +40,18 @@ export const HomeContainer: React.FC = () => {
       familyId: currentFamily?.id || 0,
     },
   });
+  const { createHousework } = useCreateHousework({});
   const { deleteHousework } = useDeleteHousework({});
   const { doneHousework } = useDoneHousework({});
   const createHouseworkDialog = useDialog();
+
+  const onClickCreateHousework = useCallback(
+    async (data) => {
+      await createHousework(currentFamily?.id, data.title, data.description, parseInt(data.point));
+      createHouseworkDialog.close();
+    },
+    [currentFamily],
+  );
 
   return (
     <>
@@ -62,6 +72,7 @@ export const HomeContainer: React.FC = () => {
       <CreateHouseworkFormContainer
         isOpen={createHouseworkDialog.isOpen}
         onClose={createHouseworkDialog.close}
+        onClickCreateHousework={onClickCreateHousework}
       />
     </>
   );
