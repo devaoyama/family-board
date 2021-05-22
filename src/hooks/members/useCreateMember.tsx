@@ -5,8 +5,6 @@ import {
   CreateMemberMutation,
   CreateMemberMutationVariables,
 } from "src/hooks/members/__generated__/CreateMemberMutation";
-import { MEMBERS_FRAGMENT } from "src/components/header/MemberListItem";
-import { GetCurrentUserQuery } from "src/hooks/members/__generated__/GetCurrentUserQuery";
 
 const CREATE_MEMBER_MUTATION = gql`
   mutation CreateMemberMutation($input: members_insert_input!) {
@@ -18,42 +16,36 @@ const CREATE_MEMBER_MUTATION = gql`
   }
 `;
 
-const GET_CURRENT_USER_QUERY = gql`
-  query GetCurrentUserQuery {
-    get_current_user {
-      id
-      name
-      current_family {
+const UPDATE_FAMILY_FRAGMENT = gql`
+  fragment UpdateFamilyFragment on families {
+    id
+    name
+    family_members {
+      member {
         id
+        user_id
         name
-        family_members {
-          member {
-            id
-            user_id
-            ...MemberFragment
-          }
-        }
       }
     }
   }
-  ${MEMBERS_FRAGMENT}
 `;
 
 type Args = {
+  currentFamilyId: number;
   onCreateMember: () => void;
   onCreateMemberError: () => void;
 };
 
 type CreateMemberArgs = {
   name: string;
-  currentFamilyId: number;
 };
 
 type CreateMemberProps = {
-  createMember: ({ name, currentFamilyId }: CreateMemberArgs) => void;
+  createMember: ({ name }: CreateMemberArgs) => void;
 };
 
 export const useCreateMember = ({
+  currentFamilyId,
   onCreateMember,
   onCreateMemberError,
 }: Args): CreateMemberProps => {
@@ -61,30 +53,30 @@ export const useCreateMember = ({
     CREATE_MEMBER_MUTATION,
     {
       update(cache, { data }) {
-        const currentUser = cache.readQuery<GetCurrentUserQuery>({ query: GET_CURRENT_USER_QUERY });
-        const newGetCurrentUser = {
-          ...currentUser?.get_current_user[0],
-          current_family: {
-            ...currentUser?.get_current_user[0].current_family,
+        const family = cache.readFragment({
+          id: `families:${currentFamilyId}`,
+          fragment: UPDATE_FAMILY_FRAGMENT,
+        });
+        cache.writeFragment({
+          id: `families:${currentFamilyId}`,
+          fragment: UPDATE_FAMILY_FRAGMENT,
+          data: {
+            ...family,
             family_members: [
-              ...(currentUser?.get_current_user[0].current_family?.family_members || []),
+              ...family.family_members,
               {
                 member: data?.insert_members_one,
                 __typename: "family_member",
               },
             ],
           },
-        };
-        cache.writeQuery({
-          query: GET_CURRENT_USER_QUERY,
-          data: { get_current_user: [newGetCurrentUser] },
         });
       },
     },
   );
 
   const createMember = useCallback(
-    async ({ name, currentFamilyId }) => {
+    async ({ name }) => {
       const variables: CreateMemberMutationVariables = {
         input: {
           name,

@@ -1,11 +1,11 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import TextField from "@material-ui/core/TextField";
 import { Box } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { useCreateMember } from "src/hooks/members/useCreateMember";
-import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
+import { FetchFamiliesQuery_families } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  currentFamily?: FetchFamiliesQuery_families;
   onSuccessAddMember: () => void;
 };
 
@@ -24,14 +25,17 @@ type FormData = {
   nickname: string;
 };
 
-export const CreateMemberFormContainer: React.FC<Props> = ({ onSuccessAddMember }) => {
-  const currentFamily = useContext(CurrentFamilyContext);
+export const CreateMemberFormContainer: React.FC<Props> = ({
+  currentFamily,
+  onSuccessAddMember,
+}) => {
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
   const { createMember } = useCreateMember({
+    currentFamilyId: currentFamily?.id || 0,
     onCreateMember: () => {
       onSuccessAddMember();
     },
@@ -43,11 +47,11 @@ export const CreateMemberFormContainer: React.FC<Props> = ({ onSuccessAddMember 
 
   const onClickCreateMember = useCallback(
     async (data) => {
-      if (currentFamily.id) {
-        await createMember({ name: data.nickname, currentFamilyId: currentFamily.id });
+      if (currentFamily?.id) {
+        await createMember({ name: data.nickname });
       }
     },
-    [currentFamily.id],
+    [currentFamily],
   );
 
   return (

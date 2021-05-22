@@ -37,19 +37,20 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
       return familyMembers.member.user_id === currentUser?.id;
     });
     return me ? me[0] : undefined;
-  }, [currentUser]);
+  }, [currentFamily, currentFamily]);
 
   const familyMembers = useMemo((): FetchFamiliesQuery_families_family_members[] | undefined => {
     return currentFamily?.family_members.filter((familyMembers) => {
       return familyMembers.member.user_id !== currentUser?.id;
     });
-  }, [currentUser]);
+  }, [currentFamily, currentFamily]);
 
   const toggle = () => {
     switch (activeView.activeView) {
       case "addMember":
         return (
           <AddMemberContainer
+            currentFamily={currentFamily}
             onClickBackButton={() => {
               activeView.toggle("members");
             }}
