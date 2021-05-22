@@ -19,10 +19,20 @@ const DONE_HOUSEWORK_MUTATION = gql`
       ...HouseworksFragment
     }
     insert_housework_member(objects: $houseworkMemberInput) {
-      affected_rows
+      returning {
+        member {
+          id
+          name
+        }
+      }
     }
     delete_housework_member(where: $houseworkMemberBoolExp) {
-      affected_rows
+      returning {
+        member {
+          id
+          name
+        }
+      }
     }
   }
   ${HOUSEWORKS_FRAGMENT}
@@ -48,7 +58,27 @@ export const useDoneHousework = ({ onDoneHousework, onDoneHouseworkError }: Args
   const [doneHouseworkMutation] = useMutation<
     DoneHouseworkMutation,
     DoneHouseworkMutationVariables
-  >(DONE_HOUSEWORK_MUTATION);
+  >(DONE_HOUSEWORK_MUTATION, {
+    update(cache, { data }) {
+      const members = data?.update_houseworks_by_pk?.housework_members.filter(
+        (houseworkMember) =>
+          !data?.delete_housework_member?.returning.find(
+            (member) => member.member.id === houseworkMember.member.id,
+          ),
+      );
+      cache.writeFragment({
+        id: `houseworks:${data?.update_houseworks_by_pk?.id}`,
+        fragment: HOUSEWORKS_FRAGMENT,
+        data: {
+          ...data,
+          housework_members: [
+            ...(members || []),
+            ...(data?.insert_housework_member?.returning || []),
+          ],
+        },
+      });
+    },
+  });
 
   const doneHousework = useCallback(
     async ({ id, status, addMemberIds, removeMemberIds }: DoneHouseworkArgs) => {

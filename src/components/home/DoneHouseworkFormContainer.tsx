@@ -39,7 +39,7 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
   onClose,
   doneHousework,
 }) => {
-  let alreadyMemberIds: number[] = housework.housework_members.map(
+  const alreadyMemberIds: number[] = housework.housework_members.map(
     (houseworkMember) => houseworkMember.member.id,
   );
   const members = getMembers();
@@ -57,11 +57,6 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
       const addMemberIds = data.memberIds.filter((id: number) => !alreadyMemberIds.includes(id));
       const removeMemberIds = alreadyMemberIds.filter((id) => !data.memberIds.includes(id));
       await doneHousework({ id: housework.id, status: data.status, addMemberIds, removeMemberIds });
-      let newAlreadyMemberIds: number[] = alreadyMemberIds.filter((id) =>
-        removeMemberIds.includes(id),
-      );
-      newAlreadyMemberIds = newAlreadyMemberIds.concat(addMemberIds);
-      alreadyMemberIds = newAlreadyMemberIds;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       onClose();
