@@ -56,12 +56,14 @@ export const Header: React.FC<Props> = ({ families, currentFamily, currentUser }
   const memberDrawer = useDrawer();
 
   const onClickFamily = useCallback(async (familyId: number) => {
-    if (!currentUser) return;
-    setFetching(true);
-    await updateCurrentFamily(currentUser.id, familyId);
-    setFetching(false);
-    drawer.close();
-  }, []);
+      if (!currentUser) return;
+      setFetching(true);
+      await updateCurrentFamily(currentUser.id, familyId);
+      setFetching(false);
+      drawer.close();
+    },
+    [currentUser],
+  );
 
   return (
     <React.Fragment>

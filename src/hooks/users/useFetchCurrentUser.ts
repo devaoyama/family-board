@@ -2,10 +2,10 @@ import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client/core";
 import {
   FetchCurrentUserQuery,
-  FetchCurrentUserQuery_get_current_user
+  FetchCurrentUserQuery_get_current_user,
 } from "src/hooks/users/__generated__/FetchCurrentUserQuery";
 
-const FETCH_CURRENT_USER_QUERY = gql`
+export const FETCH_CURRENT_USER_QUERY = gql`
   query FetchCurrentUserQuery {
     get_current_user {
       id
