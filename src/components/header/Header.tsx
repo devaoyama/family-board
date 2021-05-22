@@ -10,6 +10,7 @@ import { LoadingSpinner } from "src/components/common/LoadingSpinner";
 import { HeaderMemberDrawer } from "src/components/header/HeaderMemberDrawer";
 import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 import { useUpdateCurrentFamily } from "src/hooks/users/useUpdateCurrentFamily";
+import { useFetchFamilies } from "src/hooks/families/useFetchFamilies";
 
 export const CURRENT_FAMILY_MEMBERS_FRAGMENT = gql`
   fragment CurrentFamilyMembers on family_member {
@@ -49,6 +50,7 @@ export const Header: React.FC = () => {
   const currentFamily = useContext(CurrentFamilyContext);
   const { data, loading } = useQuery<HeaderQuery>(HEADER_QUERY);
   const { updateCurrentFamily } = useUpdateCurrentFamily({});
+  const { families } = useFetchFamilies();
   const drawer = useDrawer();
   const memberDrawer = useDrawer();
 
@@ -79,7 +81,7 @@ export const Header: React.FC = () => {
         onOpenMemberDrawer={memberDrawer.open}
       />
       <HeaderDrawer
-        families={data?.families || []}
+        families={families}
         currentFamilyId={currentFamily.id || 0}
         isOpen={drawer.isOpen}
         onClose={drawer.close}

@@ -1,10 +1,9 @@
-import React, { useCallback, useContext } from "react";
+import React, { useMemo } from "react";
 import Container from "@material-ui/core/Container";
 import { gql } from "@apollo/client/core";
-import { useApolloClient, useQuery } from "@apollo/client";
-import { CURRENT_FAMILY_MEMBERS_FRAGMENT, Header } from "src/components/header/Header";
+import { useQuery } from "@apollo/client";
+import { Header } from "src/components/header/Header";
 import { GettingStarted } from "src/components/home/GettingStarted";
-import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 import { HouseworkList } from "src/components/home/HouseworkList";
 import { CreateHouseworkFormContainer } from "src/components/home/CreateHouseworkFormContainer";
 import { useDialog } from "src/hooks/common/useDialog";
@@ -15,10 +14,8 @@ import {
 } from "src/components/home/__generated__/HouseworksQuery";
 import { useDeleteHousework } from "src/hooks/houseworks/useDeleteHousework";
 import { useDoneHousework } from "src/hooks/houseworks/useDoneHousework";
-import {
-  CurrentFamilyMembersQuery,
-  CurrentFamilyMembersQuery_get_current_user_current_family_family_members,
-} from "src/components/home/__generated__/CurrentFamilyMembersQuery";
+import { useFetchCurrentUser } from "src/hooks/users/useFetchCurrentUser";
+import { useFetchFamilies } from "src/hooks/families/useFetchFamilies";
 
 const HOUSEWORKS_QUERY = gql`
   query HouseworksQuery($familyId: Int!) {
@@ -30,49 +27,30 @@ const HOUSEWORKS_QUERY = gql`
   ${HOUSEWORKS_FRAGMENT}
 `;
 
-const CURRENT_FAMILY_MEMBERS_QUERY = gql`
-  query CurrentFamilyMembersQuery {
-    get_current_user {
-      id
-      current_family {
-        id
-        family_members {
-          member_id
-          ...CurrentFamilyMembers
-        }
-      }
-    }
-  }
-  ${CURRENT_FAMILY_MEMBERS_FRAGMENT}
-`;
-
 export const HomeContainer: React.FC = () => {
-  const currentFamily = useContext(CurrentFamilyContext);
-  const createHouseworkDialog = useDialog();
-  const client = useApolloClient();
+  const { user } = useFetchCurrentUser();
+  const { families } = useFetchFamilies();
+  const currentFamily = useMemo(() => {
+    if (!user || !families) return undefined;
+    return families.find((family) => family.id === user.current_family_id);
+  }, [user, families]);
   const { data } = useQuery<HouseworksQuery, HouseworksQueryVariables>(HOUSEWORKS_QUERY, {
     variables: {
-      familyId: currentFamily.id || 0,
+      familyId: currentFamily?.id || 0,
     },
   });
-  const getMembers = useCallback((): CurrentFamilyMembersQuery_get_current_user_current_family_family_members[] => {
-    if (!currentFamily.id) return [];
-    const data = client.readQuery<CurrentFamilyMembersQuery>({
-      query: CURRENT_FAMILY_MEMBERS_QUERY,
-    });
-    return data?.get_current_user[0].current_family?.family_members || [];
-  }, [currentFamily.id]);
   const { deleteHousework } = useDeleteHousework({});
   const { doneHousework } = useDoneHousework({});
+  const createHouseworkDialog = useDialog();
 
   return (
     <>
       <Header />
-      {currentFamily.id ? (
+      {currentFamily?.id ? (
         <Container component={"main"} maxWidth={"xs"}>
           <HouseworkList
             houseworks={data?.houseworks || []}
-            getMembers={getMembers}
+            members={currentFamily.family_members}
             onClickAddHouseworkListItem={createHouseworkDialog.open}
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}

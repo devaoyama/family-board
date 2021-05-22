@@ -15,13 +15,13 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import DialogActions from "@material-ui/core/DialogActions";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { CurrentFamilyMembersQuery_get_current_user_current_family_family_members } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
 import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
 import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
+import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
   housework: HouseworksFragment;
-  getMembers: () => CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
+  members: FetchFamiliesQuery_families_family_members[];
   isOpen: boolean;
   onClose: () => void;
   doneHousework: (args: DoneHouseworkArgs) => void;
@@ -34,7 +34,7 @@ type FormData = {
 
 export const DoneHouseworkFormContainer: React.FC<Props> = ({
   housework,
-  getMembers,
+  members,
   isOpen,
   onClose,
   doneHousework,
@@ -42,7 +42,6 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
   const alreadyMemberIds: number[] = housework.housework_members.map(
     (houseworkMember) => houseworkMember.member.id,
   );
-  const members = getMembers();
 
   const {
     control,
