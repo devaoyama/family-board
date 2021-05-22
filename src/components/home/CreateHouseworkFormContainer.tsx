@@ -41,78 +41,76 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
   );
 
   return (
-    <React.Fragment>
-      <Dialog open={isOpen} onClose={onClose} fullWidth>
-        <DialogTitle>家事を追加</DialogTitle>
-        <DialogContent>
-          <Controller
-            name="title"
-            control={control}
-            rules={{ required: "タイトルは必須です。" }}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                type="text"
-                label="タイトル"
-                value={value}
-                onChange={onChange}
-                error={Boolean(errors.title)}
-                helperText={errors.title?.message}
-                required
-                fullWidth
-                margin="normal"
-              />
-            )}
-          />
-          <Controller
-            name="description"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                type="text"
-                label="説明"
-                value={value}
-                onChange={onChange}
-                error={Boolean(errors.description)}
-                helperText={errors.description?.message}
-                margin="normal"
-                rows={4}
-                fullWidth
-                multiline
-              />
-            )}
-          />
-          <Controller
-            name="point"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                type="number"
-                label="ポイント"
-                value={value}
-                onChange={onChange}
-                error={Boolean(errors.point)}
-                helperText={errors.point?.message}
-                required
-                fullWidth
-                margin="normal"
-              />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="default">
-            キャンセル
-          </Button>
-          <Box mx="auto" />
-          <Button
-            onClick={handleSubmit(onClickCreateHousework)}
-            disabled={isSubmitting}
-            color="primary"
-          >
-            追加
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+    <Dialog open={isOpen} onClose={onClose} fullWidth>
+      <DialogTitle>家事を追加</DialogTitle>
+      <DialogContent>
+        <Controller
+          name="title"
+          control={control}
+          rules={{ required: "タイトルは必須です。" }}
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              type="text"
+              label="タイトル"
+              value={value}
+              onChange={onChange}
+              error={Boolean(errors.title)}
+              helperText={errors.title?.message}
+              required
+              fullWidth
+              margin="normal"
+            />
+          )}
+        />
+        <Controller
+          name="description"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              type="text"
+              label="説明"
+              value={value}
+              onChange={onChange}
+              error={Boolean(errors.description)}
+              helperText={errors.description?.message}
+              margin="normal"
+              rows={4}
+              fullWidth
+              multiline
+            />
+          )}
+        />
+        <Controller
+          name="point"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              type="number"
+              label="ポイント"
+              value={value}
+              onChange={onChange}
+              error={Boolean(errors.point)}
+              helperText={errors.point?.message}
+              required
+              fullWidth
+              margin="normal"
+            />
+          )}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="default">
+          キャンセル
+        </Button>
+        <Box mx="auto" />
+        <Button
+          onClick={handleSubmit(onClickCreateHousework)}
+          disabled={isSubmitting}
+          color="primary"
+        >
+          追加
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };

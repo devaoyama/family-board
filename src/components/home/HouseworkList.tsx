@@ -3,8 +3,10 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { AddHouseworkListItem } from "src/components/home/AddHouseworkListItem";
-import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 import { HouseworkListItem } from "src/components/home/HouseworkListItem";
+import { CurrentFamilyMembersQuery_get_current_user_current_family_family_members } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
+import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
+import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -19,14 +21,18 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   houseworks: HouseworksFragment[];
+  getMembers: () => CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
   onClickAddHouseworkListItem: () => void;
   deleteHousework: (id: number) => void;
+  doneHousework: (args: DoneHouseworkArgs) => void;
 };
 
 export const HouseworkList: React.FC<Props> = ({
   houseworks,
+  getMembers,
   onClickAddHouseworkListItem,
   deleteHousework,
+  doneHousework,
 }) => {
   const classes = useStyles();
 
@@ -39,12 +45,10 @@ export const HouseworkList: React.FC<Props> = ({
         {houseworks.map((housework) => (
           <HouseworkListItem
             key={housework.id}
+            getMembers={getMembers}
             housework={housework}
-            onClickCheckbox={() => {
-              // todo チェックボタンを押した時の処理
-              console.log("チェックボックスを押した");
-            }}
             deleteHousework={deleteHousework}
+            doneHousework={doneHousework}
           />
         ))}
         <AddHouseworkListItem onClickAddHouseworkListItem={onClickAddHouseworkListItem} />
