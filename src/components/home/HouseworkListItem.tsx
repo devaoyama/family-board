@@ -13,6 +13,7 @@ import { UpdateHouseworkFormContainer } from "src/components/home/UpdateHousewor
 import { DoneHouseworkFormContainer } from "src/components/home/DoneHouseworkFormContainer";
 import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
 import { CurrentFamilyMembersQuery_get_current_user_current_family_family_members } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
+import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
 
 export const HOUSEWORKS_FRAGMENT = gql`
   fragment HouseworksFragment on houseworks {
@@ -32,14 +33,14 @@ export const HOUSEWORKS_FRAGMENT = gql`
 
 type Props = {
   housework: HouseworksFragment;
-  members: CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
+  getMembers: () => CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
   deleteHousework: (id: number) => void;
-  doneHousework: (id: number, status: boolean, memberIds: number[]) => void;
+  doneHousework: (args: DoneHouseworkArgs) => void;
 };
 
 export const HouseworkListItem: React.FC<Props> = ({
   housework,
-  members,
+  getMembers,
   deleteHousework,
   doneHousework,
 }) => {
@@ -62,7 +63,7 @@ export const HouseworkListItem: React.FC<Props> = ({
       </ListItem>
       <DoneHouseworkFormContainer
         housework={housework}
-        members={members}
+        getMembers={getMembers}
         isOpen={doneDialog.isOpen}
         onClose={doneDialog.close}
         doneHousework={doneHousework}

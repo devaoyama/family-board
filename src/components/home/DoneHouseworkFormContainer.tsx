@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useState } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -15,15 +15,16 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import DialogActions from "@material-ui/core/DialogActions";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
 import { CurrentFamilyMembersQuery_get_current_user_current_family_family_members } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
+import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
+import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 
 type Props = {
   housework: HouseworksFragment;
-  members: CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
+  getMembers: () => CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
   isOpen: boolean;
   onClose: () => void;
-  doneHousework: (id: number, status: boolean, memberIds: number[]) => void;
+  doneHousework: (args: DoneHouseworkArgs) => void;
 };
 
 type FormData = {
@@ -33,15 +34,15 @@ type FormData = {
 
 export const DoneHouseworkFormContainer: React.FC<Props> = ({
   housework,
-  members,
+  getMembers,
   isOpen,
   onClose,
   doneHousework,
 }) => {
-  const alreadyMemberIds = useMemo((): number[] => {
-    const ids = housework.housework_members.map((houseworkMember) => houseworkMember.member.id);
-    return ids || [];
-  }, [housework]);
+  let alreadyMemberIds: number[] = housework.housework_members.map(
+    (houseworkMember) => houseworkMember.member.id,
+  );
+  const members = getMembers();
 
   const {
     control,
@@ -53,10 +54,16 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
 
   const onClickDoneHousework = useCallback(
     async (data) => {
-      const memberIds = data.memberIds.filter((id: number) => {
-        return !alreadyMemberIds.includes(id);
-      });
-      await doneHousework(housework.id, data.status, memberIds);
+      const addMemberIds = data.memberIds.filter((id: number) => !alreadyMemberIds.includes(id));
+      const removeMemberIds = alreadyMemberIds.filter((id) => !data.memberIds.includes(id));
+      await doneHousework({ id: housework.id, status: data.status, addMemberIds, removeMemberIds });
+      let newAlreadyMemberIds: number[] = alreadyMemberIds.filter((id) =>
+        removeMemberIds.includes(id),
+      );
+      newAlreadyMemberIds = newAlreadyMemberIds.concat(addMemberIds);
+      alreadyMemberIds = newAlreadyMemberIds;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       onClose();
     },
     [housework.id],
@@ -81,7 +88,7 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
         <Controller
           name="memberIds"
           control={control}
-          rules={{ required: "メンバーを選択してください。" }}
+          // rules={{ required: "メンバーを選択してください。" }}
           render={({ field: { onChange, value } }) => (
             <FormControl fullWidth error={Boolean(errors.memberIds)}>
               <InputLabel id="members-checkbox-label">家事をした人</InputLabel>

@@ -14,15 +14,17 @@ const UPDATE_HOUSEWORK_MUTATION = gql`
   ) {
     update_houseworks_by_pk(pk_columns: $pkColumnsInput, _set: $setInput) {
       id
-      ...HouseworksFragment
+      title
+      description
+      status
+      point
+      housework_members {
+        member {
+          id
+          name
+        }
+      }
     }
-  }
-  fragment HouseworksFragment on houseworks {
-    id
-    title
-    description
-    status
-    point
   }
 `;
 

@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { useUpdateHousework } from "src/hooks/houseworks/useUpdateHousework";
-import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
+import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 
 const useStyle = makeStyles((theme) => ({
   deleteButton: {
@@ -46,7 +46,6 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<FormData>({
     defaultValues: {
       title: housework.title,
@@ -60,7 +59,6 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
   const onClickUpdateHousework = useCallback(
     async (data) => {
       await updateHousework(housework.id, data.title, data.description, parseFloat(data.point));
-      reset();
       onClose();
     },
     [housework.id],

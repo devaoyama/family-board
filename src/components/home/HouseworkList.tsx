@@ -4,8 +4,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { AddHouseworkListItem } from "src/components/home/AddHouseworkListItem";
 import { HouseworkListItem } from "src/components/home/HouseworkListItem";
-import { HouseworksFragment } from "src/hooks/houseworks/__generated__/HouseworksFragment";
 import { CurrentFamilyMembersQuery_get_current_user_current_family_family_members } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
+import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
+import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -20,15 +21,15 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   houseworks: HouseworksFragment[];
-  members: CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
+  getMembers: () => CurrentFamilyMembersQuery_get_current_user_current_family_family_members[];
   onClickAddHouseworkListItem: () => void;
   deleteHousework: (id: number) => void;
-  doneHousework: (id: number, status: boolean, memberIds: number[]) => void;
+  doneHousework: (args: DoneHouseworkArgs) => void;
 };
 
 export const HouseworkList: React.FC<Props> = ({
   houseworks,
-  members,
+  getMembers,
   onClickAddHouseworkListItem,
   deleteHousework,
   doneHousework,
@@ -44,7 +45,7 @@ export const HouseworkList: React.FC<Props> = ({
         {houseworks.map((housework) => (
           <HouseworkListItem
             key={housework.id}
-            members={members}
+            getMembers={getMembers}
             housework={housework}
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}

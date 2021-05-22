@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useCallback, useContext } from "react";
 import Container from "@material-ui/core/Container";
 import { gql } from "@apollo/client/core";
 import { useApolloClient, useQuery } from "@apollo/client";
@@ -55,7 +55,8 @@ export const HomeContainer: React.FC = () => {
       familyId: currentFamily.id || 0,
     },
   });
-  const members = useMemo((): CurrentFamilyMembersQuery_get_current_user_current_family_family_members[] => {
+  const getMembers = useCallback((): CurrentFamilyMembersQuery_get_current_user_current_family_family_members[] => {
+    if (!currentFamily.id) return [];
     const data = client.readQuery<CurrentFamilyMembersQuery>({
       query: CURRENT_FAMILY_MEMBERS_QUERY,
     });
@@ -71,7 +72,7 @@ export const HomeContainer: React.FC = () => {
         <Container component={"main"} maxWidth={"xs"}>
           <HouseworkList
             houseworks={data?.houseworks || []}
-            members={members}
+            getMembers={getMembers}
             onClickAddHouseworkListItem={createHouseworkDialog.open}
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}
