@@ -45,8 +45,8 @@ export const HEADER_QUERY = gql`
 
 type Props = {
   families: FetchFamiliesQuery_families[];
-  currentFamily: FetchFamiliesQuery_families | undefined;
-  currentUser: FetchCurrentUserQuery_get_current_user | undefined;
+  currentFamily?: FetchFamiliesQuery_families;
+  currentUser?: FetchCurrentUserQuery_get_current_user;
 };
 
 export const Header: React.FC<Props> = ({ families, currentFamily, currentUser }) => {
@@ -55,7 +55,8 @@ export const Header: React.FC<Props> = ({ families, currentFamily, currentUser }
   const drawer = useDrawer();
   const memberDrawer = useDrawer();
 
-  const onClickFamily = useCallback(async (familyId: number) => {
+  const onClickFamily = useCallback(
+    async (familyId: number) => {
       if (!currentUser) return;
       setFetching(true);
       await updateCurrentFamily(currentUser.id, familyId);
