@@ -17,7 +17,7 @@ import { useDeleteHousework } from "src/hooks/houseworks/useDeleteHousework";
 import { useDoneHousework } from "src/hooks/houseworks/useDoneHousework";
 import {
   CurrentFamilyMembersQuery,
-  CurrentFamilyMembersQuery_get_current_user_current_family_family_members
+  CurrentFamilyMembersQuery_get_current_user_current_family_family_members,
 } from "src/components/home/__generated__/CurrentFamilyMembersQuery";
 
 const HOUSEWORKS_QUERY = gql`
