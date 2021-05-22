@@ -6,10 +6,10 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { FamilyListItem } from "src/components/header/FamilyListItem";
 import { CreateFamilyListItem } from "src/components/header/CreateFamilyListItem";
-import { HeaderQuery_families } from "src/components/header/__generated__/HeaderQuery";
+import { FetchFamiliesQuery_families } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
-  families: HeaderQuery_families[];
+  families: FetchFamiliesQuery_families[];
   currentFamilyId: number;
   isOpen: boolean;
   onClose: () => void;

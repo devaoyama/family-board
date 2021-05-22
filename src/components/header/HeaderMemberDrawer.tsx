@@ -4,13 +4,15 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { useActiveView } from "src/hooks/common/useActiveView";
 import { MemberList } from "src/components/header/MemberList";
 import { AddMemberContainer } from "src/components/header/AddMemberContainer";
+import { FetchCurrentUserQuery_get_current_user } from "src/hooks/users/__generated__/FetchCurrentUserQuery";
 import {
-  HeaderQuery_get_current_user,
-  HeaderQuery_get_current_user_current_family_family_members,
-} from "src/components/header/__generated__/HeaderQuery";
+  FetchFamiliesQuery_families,
+  FetchFamiliesQuery_families_family_members,
+} from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
-  currentUser?: HeaderQuery_get_current_user;
+  currentUser?: FetchCurrentUserQuery_get_current_user;
+  currentFamily?: FetchFamiliesQuery_families;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -21,22 +23,25 @@ const useStyles = makeStyles({
   },
 });
 
-export const HeaderMemberDrawer: React.FC<Props> = ({ currentUser, isOpen, onClose }) => {
+export const HeaderMemberDrawer: React.FC<Props> = ({
+  currentUser,
+  currentFamily,
+  isOpen,
+  onClose,
+}) => {
   const activeView = useActiveView<"members" | "addMember">({ view: "members" });
   const classes = useStyles();
 
-  const me = useMemo((): HeaderQuery_get_current_user_current_family_family_members | undefined => {
-    const me = currentUser?.current_family?.family_members.filter((familyMembers) => {
+  const me = useMemo((): FetchFamiliesQuery_families_family_members | undefined => {
+    const me = currentFamily?.family_members.filter((familyMembers) => {
       return familyMembers.member.user_id === currentUser?.id;
     });
     return me ? me[0] : undefined;
   }, [currentUser]);
 
-  const familyMembers = useMemo(():
-    | HeaderQuery_get_current_user_current_family_family_members[]
-    | undefined => {
-    return currentUser?.current_family?.family_members.filter((familyMembers) => {
-      return familyMembers.member.user_id !== currentUser.id;
+  const familyMembers = useMemo((): FetchFamiliesQuery_families_family_members[] | undefined => {
+    return currentFamily?.family_members.filter((familyMembers) => {
+      return familyMembers.member.user_id !== currentUser?.id;
     });
   }, [currentUser]);
 

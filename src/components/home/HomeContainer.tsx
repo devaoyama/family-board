@@ -45,7 +45,7 @@ export const HomeContainer: React.FC = () => {
 
   return (
     <>
-      <Header />
+      <Header families={families} currentFamily={currentFamily} currentUser={user} />
       {currentFamily?.id ? (
         <Container component={"main"} maxWidth={"xs"}>
           <HouseworkList
