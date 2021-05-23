@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,12 +7,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { Controller, useForm } from "react-hook-form";
 import Box from "@material-ui/core/Box";
-import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
-import { CurrentFamilyContext } from "src/contexts/currentFamilyContext";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onClickCreateHousework: (data: FormData) => void;
 };
 
 type FormData = {
@@ -21,24 +20,17 @@ type FormData = {
   point: number;
 };
 
-export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose }) => {
+export const CreateHouseworkFormContainer: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  onClickCreateHousework,
+}) => {
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({ defaultValues: { title: "", description: "", point: 1 } });
-  const currentFamily = useContext(CurrentFamilyContext);
-  const { createHousework } = useCreateHousework({});
-
-  const onClickCreateHousework = useCallback(
-    async (data) => {
-      await createHousework(currentFamily.id, data.title, data.description, parseInt(data.point));
-      reset();
-      onClose();
-    },
-    [currentFamily.id],
-  );
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth>
@@ -104,7 +96,10 @@ export const CreateHouseworkFormContainer: React.FC<Props> = ({ isOpen, onClose 
         </Button>
         <Box mx="auto" />
         <Button
-          onClick={handleSubmit(onClickCreateHousework)}
+          onClick={handleSubmit(async (data) => {
+            await onClickCreateHousework(data);
+            reset();
+          })}
           disabled={isSubmitting}
           color="primary"
         >

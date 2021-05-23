@@ -3,11 +3,11 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import React from "react";
 import { MemberListItem } from "src/components/header/MemberListItem";
 import { AddMemberListItem } from "src/components/header/AddMemberListItem";
-import { HeaderQuery_get_current_user_current_family_family_members } from "src/components/header/__generated__/HeaderQuery";
+import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
-  me?: HeaderQuery_get_current_user_current_family_family_members;
-  familyMembers?: HeaderQuery_get_current_user_current_family_family_members[];
+  me?: FetchFamiliesQuery_families_family_members;
+  familyMembers?: FetchFamiliesQuery_families_family_members[];
   onClickAddMemberListItem: () => void;
 };
 
