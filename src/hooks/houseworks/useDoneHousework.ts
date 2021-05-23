@@ -70,7 +70,7 @@ export const useDoneHousework = ({ onDoneHousework, onDoneHouseworkError }: Args
         id: `houseworks:${data?.update_houseworks_by_pk?.id}`,
         fragment: HOUSEWORKS_FRAGMENT,
         data: {
-          ...data,
+          ...data?.update_houseworks_by_pk,
           housework_members: [
             ...(members || []),
             ...(data?.insert_housework_member?.returning || []),
