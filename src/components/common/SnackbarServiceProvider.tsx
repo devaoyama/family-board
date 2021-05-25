@@ -1,19 +1,19 @@
 import React, { createContext, useState } from "react";
 import Snackbar, { SnackbarProps } from "@material-ui/core/Snackbar";
 
-type ToastServiceContextProps = {
+type SnackbarServiceContextProps = {
   show: (snackbarProps: SnackbarProps) => void;
 };
 
-const ToastServiceContext = createContext<ToastServiceContextProps>({
+const SnackbarServiceContext = createContext<SnackbarServiceContextProps>({
   show: () => null,
 });
 
-type ToastServiceProviderProps = {
+type SnackbarServiceProviderProps = {
   defaultSnackbarProps: SnackbarProps;
 };
 
-export const ToastServiceProvider: React.FC<ToastServiceProviderProps> = ({
+export const SnackbarServiceProvider: React.FC<SnackbarServiceProviderProps> = ({
   children,
   defaultSnackbarProps,
 }) => {
@@ -31,9 +31,9 @@ export const ToastServiceProvider: React.FC<ToastServiceProviderProps> = ({
   };
 
   return (
-    <ToastServiceContext.Provider value={{ show }}>
+    <SnackbarServiceContext.Provider value={{ show }}>
       {children}
       <Snackbar {...snackbarProps} />
-    </ToastServiceContext.Provider>
+    </SnackbarServiceContext.Provider>
   );
 };
