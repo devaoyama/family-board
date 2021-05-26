@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import Snackbar, { SnackbarProps } from "@material-ui/core/Snackbar";
 
 type SnackbarServiceContextProps = {
@@ -22,9 +22,10 @@ export const SnackbarServiceProvider: React.FC<SnackbarServiceProviderProps> = (
     onClose: () => setSnackbarProps((v) => ({ ...v, open: false })),
   });
 
-  const show = (props: Omit<SnackbarProps, "open">) => {
+  const show = (args: Omit<SnackbarProps, "open">) => {
     setSnackbarProps({
-      ...props,
+      ...defaultSnackbarProps,
+      ...args,
       open: true,
       onClose: snackbarProps.onClose,
     });
@@ -36,4 +37,9 @@ export const SnackbarServiceProvider: React.FC<SnackbarServiceProviderProps> = (
       <Snackbar {...snackbarProps} />
     </SnackbarServiceContext.Provider>
   );
+};
+
+export const useSnackbarContext = (): ((snackbarProps: SnackbarProps) => void) => {
+  const { show } = useContext(SnackbarServiceContext);
+  return show;
 };
