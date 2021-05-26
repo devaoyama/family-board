@@ -7,6 +7,7 @@ import { HouseworkListItem } from "src/components/home/HouseworkListItem";
 import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
 import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
+import { UpdateHouseworkArgs } from "src/hooks/houseworks/useUpdateHousework";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -23,6 +24,7 @@ type Props = {
   houseworks: HouseworksFragment[];
   members: FetchFamiliesQuery_families_family_members[];
   onClickAddHouseworkListItem: () => void;
+  updateHousework: (args: UpdateHouseworkArgs) => void;
   deleteHousework: (id: number) => void;
   doneHousework: (args: DoneHouseworkArgs) => void;
 };
@@ -31,6 +33,7 @@ export const HouseworkList: React.FC<Props> = ({
   houseworks,
   members,
   onClickAddHouseworkListItem,
+  updateHousework,
   deleteHousework,
   doneHousework,
 }) => {
@@ -47,6 +50,7 @@ export const HouseworkList: React.FC<Props> = ({
             key={housework.id}
             members={members}
             housework={housework}
+            updateHousework={updateHousework}
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}
           />

@@ -4,6 +4,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import "../styles/globals.css";
 import { Apollo } from "src/components/common/Apollo";
+import { SnackbarServiceProvider } from "src/components/common/SnackbarServiceProvider";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,7 +18,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           audience={"https://family-board.app/login"}
         >
           <Apollo>
-            <Component {...pageProps} />
+            <SnackbarServiceProvider defaultSnackbarProps={{ autoHideDuration: 3000 }}>
+              <Component {...pageProps} />
+            </SnackbarServiceProvider>
           </Apollo>
         </Auth0Provider>
       )}
