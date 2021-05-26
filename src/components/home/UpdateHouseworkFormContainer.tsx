@@ -58,7 +58,12 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
 
   const onClickUpdateHousework = useCallback(
     async (data) => {
-      await updateHousework(housework.id, data.title, data.description, parseFloat(data.point));
+      await updateHousework({
+        id: housework.id,
+        title: data.title,
+        description: data.description,
+        point: parseFloat(data.point),
+      });
       onClose();
     },
     [housework.id],

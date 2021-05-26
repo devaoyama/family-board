@@ -6,7 +6,6 @@ import {
   UpdateHouseworkMutationVariables,
 } from "src/hooks/houseworks/__generated__/UpdateHouseworkMutation";
 
-// なぜかHouseworkListItemコンポーネントからFragmentをインポートできなかった
 const UPDATE_HOUSEWORK_MUTATION = gql`
   mutation UpdateHouseworkMutation(
     $pkColumnsInput: houseworks_pk_columns_input!
@@ -34,7 +33,14 @@ type Args = {
 };
 
 type Props = {
-  updateHousework: (id: number, title: string, description: string, point: number) => void;
+  updateHousework: (args: UpdateHouseworkArgs) => void;
+};
+
+export type UpdateHouseworkArgs = {
+  id: number;
+  title: string;
+  description: string;
+  point: number;
 };
 
 export const useUpdateHousework = ({ onUpdateHousework, onUpdateHouseworkError }: Args): Props => {
@@ -44,7 +50,7 @@ export const useUpdateHousework = ({ onUpdateHousework, onUpdateHouseworkError }
   >(UPDATE_HOUSEWORK_MUTATION);
 
   const updateHousework = useCallback(
-    async (id: number, title: string, description: string, point: number) => {
+    async ({ id, title, description, point }: UpdateHouseworkArgs) => {
       const variables: UpdateHouseworkMutationVariables = {
         pkColumnsInput: {
           id,
