@@ -14,6 +14,7 @@ import { DoneHouseworkFormContainer } from "src/components/home/DoneHouseworkFor
 import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
 import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
+import { UpdateHouseworkArgs } from "src/hooks/houseworks/useUpdateHousework";
 
 export const HOUSEWORKS_FRAGMENT = gql`
   fragment HouseworksFragment on houseworks {
@@ -34,6 +35,7 @@ export const HOUSEWORKS_FRAGMENT = gql`
 type Props = {
   housework: HouseworksFragment;
   members: FetchFamiliesQuery_families_family_members[];
+  updateHousework: (args: UpdateHouseworkArgs) => void;
   deleteHousework: (id: number) => void;
   doneHousework: (args: DoneHouseworkArgs) => void;
 };
@@ -41,6 +43,7 @@ type Props = {
 export const HouseworkListItem: React.FC<Props> = ({
   housework,
   members,
+  updateHousework,
   deleteHousework,
   doneHousework,
 }) => {
@@ -81,6 +84,15 @@ export const HouseworkListItem: React.FC<Props> = ({
         housework={housework}
         isOpen={updateDialog.isOpen}
         onClose={updateDialog.close}
+        onClickUpdateButton={async (data) => {
+          await updateHousework({
+            id: housework.id,
+            title: data.title,
+            description: data.description,
+            point: parseFloat(String(data.point)),
+          });
+          updateDialog.close();
+        }}
         onClickDeleteButton={() => {
           deleteHousework(housework.id);
           updateDialog.close();

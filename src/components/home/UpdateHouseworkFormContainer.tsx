@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { useUpdateHousework } from "src/hooks/houseworks/useUpdateHousework";
 import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
 
 const useStyle = makeStyles((theme) => ({
@@ -27,6 +26,7 @@ type Props = {
   housework: HouseworksFragment;
   isOpen: boolean;
   onClose: () => void;
+  onClickUpdateButton: (data: FormData) => void;
   onClickDeleteButton: () => void;
 };
 
@@ -40,6 +40,7 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
   housework,
   isOpen,
   onClose,
+  onClickUpdateButton,
   onClickDeleteButton,
 }) => {
   const {
@@ -53,21 +54,7 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
       point: housework.point,
     },
   });
-  const { updateHousework } = useUpdateHousework({});
   const classes = useStyle();
-
-  const onClickUpdateHousework = useCallback(
-    async (data) => {
-      await updateHousework({
-        id: housework.id,
-        title: data.title,
-        description: data.description,
-        point: parseFloat(data.point),
-      });
-      onClose();
-    },
-    [housework.id],
-  );
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth>
@@ -141,11 +128,7 @@ export const UpdateHouseworkFormContainer: React.FC<Props> = ({
           キャンセル
         </Button>
         <Box mx="auto" />
-        <Button
-          onClick={handleSubmit(onClickUpdateHousework)}
-          disabled={isSubmitting}
-          color="primary"
-        >
+        <Button onClick={handleSubmit(onClickUpdateButton)} disabled={isSubmitting} color="primary">
           更新
         </Button>
       </DialogActions>

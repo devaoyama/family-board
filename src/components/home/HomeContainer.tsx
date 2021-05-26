@@ -13,6 +13,7 @@ import { useFetchHouseworks } from "src/hooks/houseworks/useFetchHouseworks";
 import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
 import { useShowSuccessSnackbar } from "src/hooks/common/useShowSuccessSnackbar";
 import { useShowErrorSnackbar } from "src/hooks/common/useShowErrorSnackbar";
+import { useUpdateHousework } from "src/hooks/houseworks/useUpdateHousework";
 
 export const HomeContainer: React.FC = () => {
   const showSuccessSnackbar = useShowSuccessSnackbar();
@@ -32,6 +33,14 @@ export const HomeContainer: React.FC = () => {
     },
     onCreateHouseworkError: () => {
       showErrorSnackbar("家事の作成に失敗しました。", {});
+    },
+  });
+  const { updateHousework } = useUpdateHousework({
+    onUpdateHousework: () => {
+      showSuccessSnackbar("家事を編集しました。", {});
+    },
+    onUpdateHouseworkError: () => {
+      showErrorSnackbar("家事の編集に失敗しました。", {});
     },
   });
   const { deleteHousework } = useDeleteHousework({
@@ -68,6 +77,7 @@ export const HomeContainer: React.FC = () => {
             houseworks={houseworks}
             members={currentFamily.family_members}
             onClickAddHouseworkListItem={createHouseworkDialog.open}
+            updateHousework={updateHousework}
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}
           />
