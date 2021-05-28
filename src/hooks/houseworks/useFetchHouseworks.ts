@@ -31,15 +31,11 @@ export const useFetchHouseworks = ({ familyId }: Args): Props => {
   const [loadHouseworks, { loading, called, data }] = useLazyQuery<
     FetchHouseworksQuery,
     FetchHouseworksQueryVariables
-  >(FETCH_HOUSEWORKS_QUERY, {
-    variables: {
-      familyId: familyId || 0,
-    },
-  });
+  >(FETCH_HOUSEWORKS_QUERY);
 
   useEffect(() => {
     if (!familyId || called) return;
-    loadHouseworks();
+    loadHouseworks({ variables: { familyId } });
   }, [familyId]);
 
   useEffect(() => {
