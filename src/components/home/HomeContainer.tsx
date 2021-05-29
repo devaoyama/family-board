@@ -3,6 +3,7 @@ import Container from "@material-ui/core/Container";
 import ReactCalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 import dayjs from "dayjs";
+import Box from "@material-ui/core/Box";
 import { Header } from "src/components/header/Header";
 import { GettingStarted } from "src/components/home/GettingStarted";
 import { HouseworkList } from "src/components/home/HouseworkList";
@@ -104,6 +105,7 @@ export const HomeContainer: React.FC = () => {
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}
           />
+          <Box my={3} />
           <ReactCalendarHeatmap
             startDate={fromDate}
             endDate={toDate}
