@@ -13,6 +13,7 @@ import {
 type Props = {
   currentUser?: FetchCurrentUserQuery_get_current_user;
   currentFamily?: FetchFamiliesQuery_families;
+  me?: FetchFamiliesQuery_families_family_members;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -26,18 +27,12 @@ const useStyles = makeStyles({
 export const HeaderMemberDrawer: React.FC<Props> = ({
   currentUser,
   currentFamily,
+  me,
   isOpen,
   onClose,
 }) => {
   const activeView = useActiveView<"members" | "addMember">({ view: "members" });
   const classes = useStyles();
-
-  const me = useMemo((): FetchFamiliesQuery_families_family_members | undefined => {
-    const me = currentFamily?.family_members.filter((familyMembers) => {
-      return familyMembers.member.user_id === currentUser?.id;
-    });
-    return me ? me[0] : undefined;
-  }, [currentFamily, currentFamily]);
 
   const familyMembers = useMemo((): FetchFamiliesQuery_families_family_members[] | undefined => {
     return currentFamily?.family_members.filter((familyMembers) => {

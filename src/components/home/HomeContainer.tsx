@@ -1,5 +1,8 @@
 import React, { useCallback, useMemo } from "react";
 import Container from "@material-ui/core/Container";
+import ReactCalendarHeatmap from "react-calendar-heatmap";
+import "react-calendar-heatmap/dist/styles.css";
+import dayjs from "dayjs";
 import { Header } from "src/components/header/Header";
 import { GettingStarted } from "src/components/home/GettingStarted";
 import { HouseworkList } from "src/components/home/HouseworkList";
@@ -14,11 +17,15 @@ import { useCreateHousework } from "src/hooks/houseworks/useCreateHousework";
 import { useShowSuccessSnackbar } from "src/hooks/common/useShowSuccessSnackbar";
 import { useShowErrorSnackbar } from "src/hooks/common/useShowErrorSnackbar";
 import { useUpdateHousework } from "src/hooks/houseworks/useUpdateHousework";
+import { useFetchHouseworksCount } from "src/hooks/houseworksCount/useFetchHouseworksCount";
+import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 export const HomeContainer: React.FC = () => {
   const showSuccessSnackbar = useShowSuccessSnackbar();
   const showErrorSnackbar = useShowErrorSnackbar();
   const createHouseworkDialog = useDialog();
+  const fromDate = dayjs().subtract(3, "month").toDate();
+  const toDate = dayjs().toDate();
 
   const { user } = useFetchCurrentUser();
   const { families } = useFetchFamilies();
@@ -26,7 +33,18 @@ export const HomeContainer: React.FC = () => {
     if (!user || !families) return undefined;
     return families.find((family) => family.id === user.current_family_id);
   }, [user, families]);
+  const currentMember = useMemo((): FetchFamiliesQuery_families_family_members | undefined => {
+    const currentMember = currentFamily?.family_members.filter((familyMembers) => {
+      return familyMembers.member.user_id === user?.id;
+    });
+    return currentMember ? currentMember[0] : undefined;
+  }, [currentFamily, currentFamily]);
   const { houseworks } = useFetchHouseworks({ familyId: user?.current_family_id });
+  const { houseworksCount } = useFetchHouseworksCount({
+    memberId: currentMember?.member.id,
+    from: fromDate,
+    to: toDate,
+  });
   const { createHousework } = useCreateHousework({
     onCreateHousework: () => {
       showSuccessSnackbar("家事を作成しました。", {});
@@ -70,7 +88,12 @@ export const HomeContainer: React.FC = () => {
 
   return (
     <>
-      <Header families={families} currentFamily={currentFamily} currentUser={user} />
+      <Header
+        families={families}
+        currentFamily={currentFamily}
+        currentUser={user}
+        currentMember={currentMember}
+      />
       {currentFamily?.id ? (
         <Container component={"main"} maxWidth={"xs"}>
           <HouseworkList
@@ -80,6 +103,25 @@ export const HomeContainer: React.FC = () => {
             updateHousework={updateHousework}
             deleteHousework={deleteHousework}
             doneHousework={doneHousework}
+          />
+          <ReactCalendarHeatmap
+            startDate={fromDate}
+            endDate={toDate}
+            values={[...houseworksCount]}
+            monthLabels={[
+              "1月",
+              "2月",
+              "3月",
+              "4月",
+              "5月",
+              "6月",
+              "7月",
+              "8月",
+              "9月",
+              "10月",
+              "11月",
+              "12月",
+            ]}
           />
         </Container>
       ) : (
