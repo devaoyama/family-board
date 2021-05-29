@@ -5,16 +5,25 @@ import { useDrawer } from "src/hooks/common/useDrawer";
 import { LoadingSpinner } from "src/components/common/LoadingSpinner";
 import { HeaderMemberDrawer } from "src/components/header/HeaderMemberDrawer";
 import { useUpdateCurrentFamily } from "src/hooks/users/useUpdateCurrentFamily";
-import { FetchFamiliesQuery_families } from "src/hooks/families/__generated__/FetchFamiliesQuery";
+import {
+  FetchFamiliesQuery_families,
+  FetchFamiliesQuery_families_family_members,
+} from "src/hooks/families/__generated__/FetchFamiliesQuery";
 import { FetchCurrentUserQuery_get_current_user } from "src/hooks/users/__generated__/FetchCurrentUserQuery";
 
 type Props = {
   families: FetchFamiliesQuery_families[];
   currentFamily?: FetchFamiliesQuery_families;
   currentUser?: FetchCurrentUserQuery_get_current_user;
+  currentMember?: FetchFamiliesQuery_families_family_members;
 };
 
-export const Header: React.FC<Props> = ({ families, currentFamily, currentUser }) => {
+export const Header: React.FC<Props> = ({
+  families,
+  currentFamily,
+  currentUser,
+  currentMember,
+}) => {
   const [fetching, setFetching] = useState<boolean>(false);
   const { updateCurrentFamily } = useUpdateCurrentFamily({});
   const drawer = useDrawer();
@@ -49,6 +58,7 @@ export const Header: React.FC<Props> = ({ families, currentFamily, currentUser }
       <HeaderMemberDrawer
         currentUser={currentUser}
         currentFamily={currentFamily}
+        me={currentMember}
         isOpen={memberDrawer.isOpen}
         onClose={memberDrawer.close}
       />
