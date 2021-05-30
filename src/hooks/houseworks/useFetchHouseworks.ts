@@ -9,8 +9,8 @@ import {
 } from "src/hooks/houseworks/__generated__/FetchHouseworksQuery";
 
 const FETCH_HOUSEWORKS_QUERY = gql`
-  query FetchHouseworksQuery($familyId: Int!) {
-    houseworks(where: { family_id: { _eq: $familyId } }) {
+  query FetchHouseworksQuery($exp: houseworks_bool_exp) {
+    houseworks(where: $exp) {
       id
       ...HouseworksFragment
     }
@@ -35,7 +35,14 @@ export const useFetchHouseworks = ({ familyId }: Args): Props => {
 
   useEffect(() => {
     if (!familyId || called) return;
-    loadHouseworks({ variables: { familyId } });
+    const variables: FetchHouseworksQueryVariables = {
+      exp: {
+        family_id: {
+          _eq: familyId,
+        },
+      },
+    };
+    loadHouseworks({ variables });
   }, [familyId]);
 
   useEffect(() => {
