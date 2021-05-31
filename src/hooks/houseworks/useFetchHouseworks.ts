@@ -20,30 +20,34 @@ const FETCH_HOUSEWORKS_QUERY = gql`
 
 type Args = {
   familyId: number | null | undefined;
+  date: Date;
 };
 
 type Props = {
   houseworks: FetchHouseworksQuery_houseworks[];
 };
 
-export const useFetchHouseworks = ({ familyId }: Args): Props => {
+export const useFetchHouseworks = ({ familyId, date }: Args): Props => {
   const [houseworks, setHouseworks] = useState<FetchHouseworksQuery_houseworks[]>([]);
-  const [loadHouseworks, { loading, called, data }] = useLazyQuery<
+  const [loadHouseworks, { loading, data }] = useLazyQuery<
     FetchHouseworksQuery,
     FetchHouseworksQueryVariables
   >(FETCH_HOUSEWORKS_QUERY);
 
   useEffect(() => {
-    if (!familyId || called) return;
+    if (!familyId) return;
     const variables: FetchHouseworksQueryVariables = {
       exp: {
         family_id: {
           _eq: familyId,
         },
+        date: {
+          _eq: date,
+        },
       },
     };
     loadHouseworks({ variables });
-  }, [familyId]);
+  }, [familyId, date]);
 
   useEffect(() => {
     if (loading) return;
