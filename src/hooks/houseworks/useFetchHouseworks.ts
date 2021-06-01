@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { gql } from "@apollo/client/core";
+import dayjs from "dayjs";
 import { HOUSEWORKS_FRAGMENT } from "src/components/home/HouseworkListItem";
 import {
   FetchHouseworksQuery,
@@ -12,6 +13,7 @@ const FETCH_HOUSEWORKS_QUERY = gql`
   query FetchHouseworksQuery($exp: houseworks_bool_exp) {
     houseworks(where: $exp) {
       id
+      date
       ...HouseworksFragment
     }
   }
@@ -21,13 +23,15 @@ const FETCH_HOUSEWORKS_QUERY = gql`
 type Args = {
   familyId: number | null | undefined;
   date: Date;
+  to: Date;
+  from: Date;
 };
 
 type Props = {
   houseworks: FetchHouseworksQuery_houseworks[];
 };
 
-export const useFetchHouseworks = ({ familyId, date }: Args): Props => {
+export const useFetchHouseworks = ({ familyId, date, to, from }: Args): Props => {
   const [houseworks, setHouseworks] = useState<FetchHouseworksQuery_houseworks[]>([]);
   const [loadHouseworks, { loading, data }] = useLazyQuery<
     FetchHouseworksQuery,
@@ -42,17 +46,21 @@ export const useFetchHouseworks = ({ familyId, date }: Args): Props => {
           _eq: familyId,
         },
         date: {
-          _eq: date,
+          _gte: from,
+          _lte: to,
         },
       },
     };
     loadHouseworks({ variables });
-  }, [familyId, date]);
+  }, [familyId]);
 
   useEffect(() => {
-    if (loading) return;
-    setHouseworks(data?.houseworks || []);
-  }, [data, loading]);
+    if (loading || !data) return;
+    const selectedDateHouseworks = data.houseworks.filter((housework) => {
+      return housework.date === dayjs(date).format("YYYY-MM-DD");
+    });
+    setHouseworks(selectedDateHouseworks);
+  }, [data, loading, date, familyId]);
 
   return {
     houseworks,
