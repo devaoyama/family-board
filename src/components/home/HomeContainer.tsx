@@ -26,8 +26,8 @@ export const HomeContainer: React.FC = () => {
   const showSuccessSnackbar = useShowSuccessSnackbar();
   const showErrorSnackbar = useShowErrorSnackbar();
   const createHouseworkDialog = useDialog();
-  const fromDate = dayjs().subtract(3, "month").toDate();
-  const toDate = dayjs().toDate();
+  const fromDate = useMemo(() => dayjs().subtract(3, "month").toDate(), []);
+  const toDate = useMemo(() => dayjs().toDate(), []);
   const dates = useMemo(() => {
     const days = dayjs(toDate).diff(fromDate, "days");
     return [...Array(days + 1)].map((_, i) => {

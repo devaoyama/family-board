@@ -52,7 +52,7 @@ export const useFetchHouseworks = ({ familyId, date, from, to }: Args): Props =>
       },
     };
     loadHouseworks({ variables });
-  }, [familyId, from, to]);
+  }, [familyId]);
 
   useEffect(() => {
     if (loading || !data) return;
