@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  selectedDateToString: string;
   houseworks: HouseworksFragment[];
   members: FetchFamiliesQuery_families_family_members[];
   onClickAddHouseworkListItem: () => void;
@@ -30,6 +31,7 @@ type Props = {
 };
 
 export const HouseworkList: React.FC<Props> = ({
+  selectedDateToString,
   houseworks,
   members,
   onClickAddHouseworkListItem,
@@ -42,7 +44,7 @@ export const HouseworkList: React.FC<Props> = ({
   return (
     <>
       <Typography variant="h6" className={classes.title}>
-        今日の家事リスト
+        {selectedDateToString}の家事リスト
       </Typography>
       <List className={classes.list}>
         {houseworks.map((housework) => (
