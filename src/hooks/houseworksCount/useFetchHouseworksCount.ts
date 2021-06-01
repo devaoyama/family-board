@@ -30,13 +30,13 @@ export const useFetchHouseworksCount = ({ memberId, from, to }: Args): Props => 
   const [houseworksCount, setHouseworksCount] = useState<
     FetchHouseworksCountQuery_get_houseworks_count[]
   >([]);
-  const [loadHouseworksCount, { loading, called, data }] = useLazyQuery<
+  const [loadHouseworksCount, { loading, data }] = useLazyQuery<
     FetchHouseworksCountQuery,
     FetchHouseworksCountQueryVariables
   >(FETCH_HOUSEWORKS_COUNT_QUERY);
 
   useEffect(() => {
-    if (!memberId || called) return;
+    if (!memberId) return;
     loadHouseworksCount({
       variables: {
         args: {

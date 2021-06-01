@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Container from "@material-ui/core/Container";
 import ReactCalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
@@ -22,11 +22,33 @@ import { useFetchHouseworksCount } from "src/hooks/houseworksCount/useFetchHouse
 import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 export const HomeContainer: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState<Date>(dayjs().toDate());
   const showSuccessSnackbar = useShowSuccessSnackbar();
   const showErrorSnackbar = useShowErrorSnackbar();
   const createHouseworkDialog = useDialog();
-  const fromDate = dayjs().subtract(3, "month").toDate();
-  const toDate = dayjs().toDate();
+  const fromDate = useMemo(() => dayjs().subtract(3, "month").toDate(), []);
+  const toDate = useMemo(() => dayjs().toDate(), []);
+  const dates = useMemo(() => {
+    const days = dayjs(toDate).diff(fromDate, "days");
+    return [...Array(days + 1)].map((_, i) => {
+      return { date: dayjs(fromDate).add(i, "days").format("YYYY-MM-DD"), count: 0 };
+    });
+  }, []);
+  const selectedDateToString = useMemo(() => {
+    const today = dayjs();
+    const selectedDateByDayjs = dayjs(selectedDate);
+    const diff = today.diff(selectedDateByDayjs, "days");
+    switch (diff) {
+      case 0:
+        return "今日";
+      case -1:
+        return "明日";
+      case 1:
+        return "昨日";
+      default:
+        return selectedDateByDayjs.format("M月D日");
+    }
+  }, [selectedDate]);
 
   const { user } = useFetchCurrentUser();
   const { families } = useFetchFamilies();
@@ -40,7 +62,12 @@ export const HomeContainer: React.FC = () => {
     });
     return currentMember ? currentMember[0] : undefined;
   }, [currentFamily, currentFamily]);
-  const { houseworks } = useFetchHouseworks({ familyId: user?.current_family_id });
+  const { houseworks } = useFetchHouseworks({
+    familyId: user?.current_family_id,
+    date: selectedDate,
+    from: fromDate,
+    to: toDate,
+  });
   const { houseworksCount } = useFetchHouseworksCount({
     memberId: currentMember?.member.id,
     from: fromDate,
@@ -98,6 +125,7 @@ export const HomeContainer: React.FC = () => {
       {currentFamily?.id ? (
         <Container component={"main"} maxWidth={"xs"}>
           <HouseworkList
+            selectedDateToString={selectedDateToString}
             houseworks={houseworks}
             members={currentFamily.family_members}
             onClickAddHouseworkListItem={createHouseworkDialog.open}
@@ -109,7 +137,12 @@ export const HomeContainer: React.FC = () => {
           <ReactCalendarHeatmap
             startDate={fromDate}
             endDate={toDate}
-            values={[...houseworksCount]}
+            values={[...dates, ...houseworksCount]}
+            classForValue={(value) => {
+              if (!value?.count) return "color-empty";
+              return "color-filled";
+            }}
+            onClick={(value) => setSelectedDate(new Date(value?.date))}
             monthLabels={[
               "1月",
               "2月",
