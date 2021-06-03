@@ -10,6 +10,7 @@ const FETCH_FAMILIES_QUERY = gql`
     families {
       id
       name
+      invitation_code
       family_members {
         member {
           id
