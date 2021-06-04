@@ -5,12 +5,14 @@ import {
   CreateFamilyMutation,
   CreateFamilyMutationVariables,
 } from "src/hooks/families/__generated__/CreateFamilyMutation";
+import { generateRandomString } from "src/utils/generateRandomValues";
 
 const CREATE_FAMILY_MUTATION = gql`
   mutation CreateFamilyMutation($input: families_insert_input!) {
     insert_families_one(object: $input) {
       id
       name
+      invitation_code
       family_members {
         member {
           id
@@ -26,6 +28,7 @@ const NEW_FAMILY_FRAGMENT = gql`
   fragment NewFamilyFragment on families {
     id
     name
+    invitation_code
     family_members {
       member {
         id
@@ -80,6 +83,7 @@ export const useCreateFamily = ({
       const variables: CreateFamilyMutationVariables = {
         input: {
           name: name,
+          invitation_code: generateRandomString(10), // できればバックエンドで処理できるようにする
           family_members: {
             data: [
               {
