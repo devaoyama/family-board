@@ -41,6 +41,10 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
     });
   }, [currentFamily, currentFamily]);
 
+  const invitationCode = useMemo((): string => {
+    return `${currentFamily?.invitations[0].id}-${currentFamily?.invitations[0].code}`;
+  }, [currentFamily?.invitations]);
+
   const toggle = () => {
     switch (activeView.activeView) {
       case "addMember":
@@ -55,7 +59,7 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
       case "inviteMember":
         return (
           <InviteMemberCode
-            inviteCode={currentFamily?.invitation_code}
+            inviteCode={invitationCode}
             onClickBackButton={() => {
               activeView.toggle("members");
             }}
