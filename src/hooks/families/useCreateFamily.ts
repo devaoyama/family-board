@@ -12,13 +12,16 @@ const CREATE_FAMILY_MUTATION = gql`
     insert_families_one(object: $input) {
       id
       name
-      invitation_code
       family_members {
         member {
           id
           name
           user_id
         }
+      }
+      invitations {
+        id
+        code
       }
     }
   }
@@ -28,13 +31,16 @@ const NEW_FAMILY_FRAGMENT = gql`
   fragment NewFamilyFragment on families {
     id
     name
-    invitation_code
     family_members {
       member {
         id
         name
         user_id
       }
+    }
+    invitations {
+      id
+      code
     }
   }
 `;
@@ -83,7 +89,6 @@ export const useCreateFamily = ({
       const variables: CreateFamilyMutationVariables = {
         input: {
           name: name,
-          invitation_code: generateRandomString(10), // できればバックエンドで処理できるようにする
           family_members: {
             data: [
               {
@@ -93,6 +98,13 @@ export const useCreateFamily = ({
                     user_id: currentUserId,
                   },
                 },
+              },
+            ],
+          },
+          invitations: {
+            data: [
+              {
+                code: generateRandomString(10),
               },
             ],
           },
