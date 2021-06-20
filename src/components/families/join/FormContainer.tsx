@@ -20,7 +20,6 @@ type Props = {
 
 type FormData = {
   invitationCode: string;
-  name: string;
   nickname: string;
 };
 
@@ -54,25 +53,6 @@ export const FormContainer: React.FC<Props> = ({ onClickJoinFamily }) => {
         )}
       />
       <Controller
-        name="name"
-        control={control}
-        defaultValue=""
-        rules={{ required: "ファミリー名は必須です。" }}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            type="text"
-            label="参加するファミリー名"
-            value={value}
-            onChange={onChange}
-            error={Boolean(errors.name)}
-            helperText={errors.name?.message}
-            required
-            fullWidth
-            margin="normal"
-          />
-        )}
-      />
-      <Controller
         name="nickname"
         control={control}
         defaultValue=""
@@ -94,7 +74,6 @@ export const FormContainer: React.FC<Props> = ({ onClickJoinFamily }) => {
       <Box my={1} />
       <Button
         type={"button"}
-        name={"name"}
         fullWidth
         variant={"contained"}
         color={"primary"}
