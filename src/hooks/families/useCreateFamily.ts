@@ -27,7 +27,7 @@ const CREATE_FAMILY_MUTATION = gql`
   }
 `;
 
-const NEW_FAMILY_FRAGMENT = gql`
+export const NEW_FAMILY_FRAGMENT = gql`
   fragment NewFamilyFragment on families {
     id
     name
