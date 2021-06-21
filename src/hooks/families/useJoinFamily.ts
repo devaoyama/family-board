@@ -31,7 +31,7 @@ const JOIN_FAMILY_MUTATION = gql`
 
 type Args = {
   currentUserId: string;
-  onJoinFamily?: () => void;
+  onJoinFamily?: (familyId: number) => void;
   onJoinFamilyError?: () => void;
 };
 
@@ -40,7 +40,7 @@ type Props = {
 };
 
 type JoinFamilyArgs = {
-  family_id: number;
+  familyId: number;
   name: string;
 };
 
@@ -64,10 +64,10 @@ export const useJoinFamily = ({ currentUserId, onJoinFamily, onJoinFamilyError }
     },
   );
 
-  const joinFamily = useCallback(async ({ family_id, name }: JoinFamilyArgs) => {
+  const joinFamily = useCallback(async ({ familyId, name }: JoinFamilyArgs) => {
     const variables: JoinFamilyMutationVariables = {
       input: {
-        family_id,
+        family_id: familyId,
         member: {
           data: {
             name,
@@ -79,7 +79,7 @@ export const useJoinFamily = ({ currentUserId, onJoinFamily, onJoinFamilyError }
     await joinFamilyMutation({ variables })
       .then(() => {
         if (!onJoinFamily) return;
-        onJoinFamily();
+        onJoinFamily(familyId);
       })
       .catch(() => {
         if (!onJoinFamilyError) return;
