@@ -11,6 +11,7 @@ import Link from "next/link";
 type Props = {
   name: string | undefined;
   isShowMemberDrawerIcon: boolean;
+  isShowFamilyDrawerIcon: boolean;
   onOpenDrawer: () => void;
   onOpenMemberDrawer: () => void;
 };
@@ -18,15 +19,18 @@ type Props = {
 export const MyAppBar: React.FC<Props> = ({
   name,
   isShowMemberDrawerIcon,
+  isShowFamilyDrawerIcon,
   onOpenDrawer,
   onOpenMemberDrawer,
 }) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" onClick={onOpenDrawer}>
-          <MenuIcon />
-        </IconButton>
+        {isShowFamilyDrawerIcon && (
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick={onOpenDrawer}>
+            <MenuIcon />
+          </IconButton>
+        )}
         <Box mx={"auto"}>
           <Link href={"/"}>
             <Typography variant="h6">{name ? `${name} 家` : "ファミリーボード"}</Typography>

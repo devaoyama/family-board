@@ -17,6 +17,10 @@ const FETCH_FAMILIES_QUERY = gql`
           name
         }
       }
+      invitations {
+        id
+        code
+      }
     }
   }
 `;

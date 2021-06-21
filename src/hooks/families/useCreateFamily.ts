@@ -5,6 +5,7 @@ import {
   CreateFamilyMutation,
   CreateFamilyMutationVariables,
 } from "src/hooks/families/__generated__/CreateFamilyMutation";
+import { generateRandomString } from "src/utils/generateRandomValues";
 
 const CREATE_FAMILY_MUTATION = gql`
   mutation CreateFamilyMutation($input: families_insert_input!) {
@@ -18,11 +19,15 @@ const CREATE_FAMILY_MUTATION = gql`
           user_id
         }
       }
+      invitations {
+        id
+        code
+      }
     }
   }
 `;
 
-const NEW_FAMILY_FRAGMENT = gql`
+export const NEW_FAMILY_FRAGMENT = gql`
   fragment NewFamilyFragment on families {
     id
     name
@@ -32,6 +37,10 @@ const NEW_FAMILY_FRAGMENT = gql`
         name
         user_id
       }
+    }
+    invitations {
+      id
+      code
     }
   }
 `;
@@ -89,6 +98,13 @@ export const useCreateFamily = ({
                     user_id: currentUserId,
                   },
                 },
+              },
+            ],
+          },
+          invitations: {
+            data: [
+              {
+                code: generateRandomString(10),
               },
             ],
           },

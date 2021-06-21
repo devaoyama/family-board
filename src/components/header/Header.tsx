@@ -45,6 +45,7 @@ export const Header: React.FC<Props> = ({
       <MyAppBar
         name={currentFamily?.name}
         isShowMemberDrawerIcon={Boolean(currentFamily)}
+        isShowFamilyDrawerIcon={Boolean(currentUser)}
         onOpenDrawer={drawer.open}
         onOpenMemberDrawer={memberDrawer.open}
       />

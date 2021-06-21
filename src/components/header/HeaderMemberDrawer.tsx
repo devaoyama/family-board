@@ -4,6 +4,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import { useActiveView } from "src/hooks/common/useActiveView";
 import { MemberList } from "src/components/header/MemberList";
 import { AddMemberContainer } from "src/components/header/AddMemberContainer";
+import { InviteMemberCode } from "src/components/header/InviteMemberCode";
 import { FetchCurrentUserQuery_get_current_user } from "src/hooks/users/__generated__/FetchCurrentUserQuery";
 import {
   FetchFamiliesQuery_families,
@@ -31,7 +32,7 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
   isOpen,
   onClose,
 }) => {
-  const activeView = useActiveView<"members" | "addMember">({ view: "members" });
+  const activeView = useActiveView<"members" | "addMember" | "inviteMember">({ view: "members" });
   const classes = useStyles();
 
   const familyMembers = useMemo((): FetchFamiliesQuery_families_family_members[] | undefined => {
@@ -40,12 +41,25 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
     });
   }, [currentFamily, currentFamily]);
 
+  const invitationCode = useMemo((): string => {
+    return `${currentFamily?.invitations[0].id}-${currentFamily?.invitations[0].code}`;
+  }, [currentFamily?.invitations]);
+
   const toggle = () => {
     switch (activeView.activeView) {
       case "addMember":
         return (
           <AddMemberContainer
             currentFamily={currentFamily}
+            onClickBackButton={() => {
+              activeView.toggle("members");
+            }}
+          />
+        );
+      case "inviteMember":
+        return (
+          <InviteMemberCode
+            inviteCode={invitationCode}
             onClickBackButton={() => {
               activeView.toggle("members");
             }}
@@ -59,6 +73,9 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
               familyMembers={familyMembers}
               onClickAddMemberListItem={() => {
                 activeView.toggle("addMember");
+              }}
+              onClickInviteMemberListItem={() => {
+                activeView.toggle("inviteMember");
               }}
             />
           );
