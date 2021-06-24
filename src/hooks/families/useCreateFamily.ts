@@ -12,12 +12,10 @@ const CREATE_FAMILY_MUTATION = gql`
     insert_families_one(object: $input) {
       id
       name
-      family_members {
-        member {
-          id
-          name
-          user_id
-        }
+      members {
+        id
+        name
+        user_id
       }
       invitations {
         id
@@ -31,12 +29,10 @@ export const NEW_FAMILY_FRAGMENT = gql`
   fragment NewFamilyFragment on families {
     id
     name
-    family_members {
-      member {
-        id
-        name
-        user_id
-      }
+    members {
+      id
+      name
+      user_id
     }
     invitations {
       id

@@ -8,17 +8,15 @@ import {
 import { NEW_FAMILY_FRAGMENT } from "src/hooks/families/useCreateFamily";
 
 const JOIN_FAMILY_MUTATION = gql`
-  mutation JoinFamilyMutation($input: family_member_insert_input!) {
-    insert_family_member_one(object: $input) {
+  mutation JoinFamilyMutation($input: members_insert_input!) {
+    insert_members_one(object: $input) {
       family {
         id
         name
-        family_members {
-          member {
-            id
-            name
-            user_id
-          }
+        members {
+          id
+          name
+          user_id
         }
         invitations {
           id

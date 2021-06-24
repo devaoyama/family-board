@@ -21,12 +21,10 @@ const UPDATE_FAMILY_FRAGMENT = gql`
   fragment UpdateFamilyFragment on families {
     id
     name
-    family_members {
-      member {
-        id
-        user_id
-        name
-      }
+    members {
+      id
+      user_id
+      name
     }
   }
 `;
