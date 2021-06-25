@@ -8,13 +8,13 @@ import { InviteMemberCode } from "src/components/header/InviteMemberCode";
 import { FetchCurrentUserQuery_get_current_user } from "src/hooks/users/__generated__/FetchCurrentUserQuery";
 import {
   FetchFamiliesQuery_families,
-  FetchFamiliesQuery_families_family_members,
+  FetchFamiliesQuery_families_members,
 } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
   currentUser?: FetchCurrentUserQuery_get_current_user;
   currentFamily?: FetchFamiliesQuery_families;
-  me?: FetchFamiliesQuery_families_family_members;
+  me?: FetchFamiliesQuery_families_members;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -35,9 +35,9 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
   const activeView = useActiveView<"members" | "addMember" | "inviteMember">({ view: "members" });
   const classes = useStyles();
 
-  const familyMembers = useMemo((): FetchFamiliesQuery_families_family_members[] | undefined => {
-    return currentFamily?.family_members.filter((familyMembers) => {
-      return familyMembers.member.user_id !== currentUser?.id;
+  const members = useMemo((): FetchFamiliesQuery_families_members[] | undefined => {
+    return currentFamily?.members.filter((member) => {
+      return member.user_id !== currentUser?.id;
     });
   }, [currentFamily, currentFamily]);
 
@@ -70,7 +70,7 @@ export const HeaderMemberDrawer: React.FC<Props> = ({
           return (
             <MemberList
               me={me}
-              familyMembers={familyMembers}
+              members={members}
               onClickAddMemberListItem={() => {
                 activeView.toggle("addMember");
               }}
