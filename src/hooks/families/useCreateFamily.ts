@@ -85,15 +85,11 @@ export const useCreateFamily = ({
       const variables: CreateFamilyMutationVariables = {
         input: {
           name: name,
-          family_members: {
+          members: {
             data: [
               {
-                member: {
-                  data: {
-                    name: nickname,
-                    user_id: currentUserId,
-                  },
-                },
+                name: nickname,
+                user_id: currentUserId,
               },
             ],
           },
