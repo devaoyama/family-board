@@ -51,7 +51,7 @@ export const useJoinFamily = ({ currentUserId, onJoinFamily, onJoinFamilyError }
           fields: {
             families(existingFamilyRefs = []) {
               const newFamilyRef = cache.writeFragment({
-                data: data?.insert_family_member_one?.family,
+                data: data?.insert_members_one?.family,
                 fragment: NEW_FAMILY_FRAGMENT,
               });
               return [...existingFamilyRefs, newFamilyRef];
@@ -66,12 +66,8 @@ export const useJoinFamily = ({ currentUserId, onJoinFamily, onJoinFamilyError }
     const variables: JoinFamilyMutationVariables = {
       input: {
         family_id: familyId,
-        member: {
-          data: {
-            name,
-            user_id: currentUserId,
-          },
-        },
+        user_id: currentUserId,
+        name,
       },
     };
     await joinFamilyMutation({ variables })
