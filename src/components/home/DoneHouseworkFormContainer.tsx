@@ -17,11 +17,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { DoneHouseworkArgs } from "src/hooks/houseworks/useDoneHousework";
 import { HouseworksFragment } from "src/components/home/__generated__/HouseworksFragment";
-import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
+import { FetchFamiliesQuery_families_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
   housework: HouseworksFragment;
-  members: FetchFamiliesQuery_families_family_members[];
+  members: FetchFamiliesQuery_families_members[];
   isOpen: boolean;
   onClose: () => void;
   doneHousework: (args: DoneHouseworkArgs) => void;
@@ -96,17 +96,17 @@ export const DoneHouseworkFormContainer: React.FC<Props> = ({
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   const selectedMembers = selected.map((id: number) => {
-                    const selectedMember = members.find((member) => member.member.id === id);
-                    return selectedMember?.member.name;
+                    const selectedMember = members.find((member) => member.id === id);
+                    return selectedMember?.name;
                   });
                   return selectedMembers.join(", ");
                 }}
                 multiple
               >
                 {members.map((member) => (
-                  <MenuItem key={member.member.id} value={member.member.id}>
-                    <Checkbox checked={value.indexOf(member.member.id) > -1} />
-                    <ListItemText primary={member.member.name} />
+                  <MenuItem key={member.id} value={member.id}>
+                    <Checkbox checked={value.indexOf(member.id) > -1} />
+                    <ListItemText primary={member.name} />
                   </MenuItem>
                 ))}
               </Select>
