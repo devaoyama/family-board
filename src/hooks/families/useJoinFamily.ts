@@ -8,17 +8,15 @@ import {
 import { NEW_FAMILY_FRAGMENT } from "src/hooks/families/useCreateFamily";
 
 const JOIN_FAMILY_MUTATION = gql`
-  mutation JoinFamilyMutation($input: family_member_insert_input!) {
-    insert_family_member_one(object: $input) {
+  mutation JoinFamilyMutation($input: members_insert_input!) {
+    insert_members_one(object: $input) {
       family {
         id
         name
-        family_members {
-          member {
-            id
-            name
-            user_id
-          }
+        members {
+          id
+          name
+          user_id
         }
         invitations {
           id
@@ -53,7 +51,7 @@ export const useJoinFamily = ({ currentUserId, onJoinFamily, onJoinFamilyError }
           fields: {
             families(existingFamilyRefs = []) {
               const newFamilyRef = cache.writeFragment({
-                data: data?.insert_family_member_one?.family,
+                data: data?.insert_members_one?.family,
                 fragment: NEW_FAMILY_FRAGMENT,
               });
               return [...existingFamilyRefs, newFamilyRef];
@@ -68,12 +66,8 @@ export const useJoinFamily = ({ currentUserId, onJoinFamily, onJoinFamilyError }
     const variables: JoinFamilyMutationVariables = {
       input: {
         family_id: familyId,
-        member: {
-          data: {
-            name,
-            user_id: currentUserId,
-          },
-        },
+        user_id: currentUserId,
+        name,
       },
     };
     await joinFamilyMutation({ variables })

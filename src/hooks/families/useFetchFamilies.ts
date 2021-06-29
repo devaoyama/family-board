@@ -10,12 +10,10 @@ const FETCH_FAMILIES_QUERY = gql`
     families {
       id
       name
-      family_members {
-        member {
-          id
-          user_id
-          name
-        }
+      members {
+        id
+        user_id
+        name
       }
       invitations {
         id

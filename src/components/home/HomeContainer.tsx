@@ -19,7 +19,7 @@ import { useShowSuccessSnackbar } from "src/hooks/common/useShowSuccessSnackbar"
 import { useShowErrorSnackbar } from "src/hooks/common/useShowErrorSnackbar";
 import { useUpdateHousework } from "src/hooks/houseworks/useUpdateHousework";
 import { useFetchHouseworksCount } from "src/hooks/houseworksCount/useFetchHouseworksCount";
-import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
+import { FetchFamiliesQuery_families_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 export const HomeContainer: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(dayjs().toDate());
@@ -56,9 +56,9 @@ export const HomeContainer: React.FC = () => {
     if (!user || !families) return undefined;
     return families.find((family) => family.id === user.current_family_id);
   }, [user, families]);
-  const currentMember = useMemo((): FetchFamiliesQuery_families_family_members | undefined => {
-    const currentMember = currentFamily?.family_members.filter((familyMembers) => {
-      return familyMembers.member.user_id === user?.id;
+  const currentMember = useMemo((): FetchFamiliesQuery_families_members | undefined => {
+    const currentMember = currentFamily?.members.filter((member) => {
+      return member.user_id === user?.id;
     });
     return currentMember ? currentMember[0] : undefined;
   }, [currentFamily, currentFamily]);
@@ -69,7 +69,7 @@ export const HomeContainer: React.FC = () => {
     to: toDate,
   });
   const { houseworksCount } = useFetchHouseworksCount({
-    memberId: currentMember?.member.id,
+    memberId: currentMember?.id,
     from: fromDate,
     to: toDate,
   });
@@ -127,7 +127,7 @@ export const HomeContainer: React.FC = () => {
           <HouseworkList
             selectedDateToString={selectedDateToString}
             houseworks={houseworks}
-            members={currentFamily.family_members}
+            members={currentFamily.members}
             onClickAddHouseworkListItem={createHouseworkDialog.open}
             updateHousework={updateHousework}
             deleteHousework={deleteHousework}

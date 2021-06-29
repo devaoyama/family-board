@@ -21,12 +21,10 @@ const UPDATE_FAMILY_FRAGMENT = gql`
   fragment UpdateFamilyFragment on families {
     id
     name
-    family_members {
-      member {
-        id
-        user_id
-        name
-      }
+    members {
+      id
+      user_id
+      name
     }
   }
 `;
@@ -63,8 +61,8 @@ export const useCreateMember = ({
           fragment: UPDATE_FAMILY_FRAGMENT,
           data: {
             ...family,
-            family_members: [
-              ...(family?.family_members || []),
+            members: [
+              ...(family?.members || []),
               {
                 member: data?.insert_members_one,
                 __typename: "family_member",
@@ -80,14 +78,8 @@ export const useCreateMember = ({
     async ({ name }) => {
       const variables: CreateMemberMutationVariables = {
         input: {
+          family_id: currentFamilyId,
           name,
-          family_members: {
-            data: [
-              {
-                family_id: currentFamilyId,
-              },
-            ],
-          },
         },
       };
       await createMemberMutation({ variables })

@@ -4,31 +4,28 @@ import React from "react";
 import { MemberListItem } from "src/components/header/MemberListItem";
 import { AddMemberListItem } from "src/components/header/AddMemberListItem";
 import { InviteMemberListItem } from "src/components/header/InviteMemberListItem";
-import { FetchFamiliesQuery_families_family_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
+import { FetchFamiliesQuery_families_members } from "src/hooks/families/__generated__/FetchFamiliesQuery";
 
 type Props = {
-  me?: FetchFamiliesQuery_families_family_members;
-  familyMembers?: FetchFamiliesQuery_families_family_members[];
+  me?: FetchFamiliesQuery_families_members;
+  members?: FetchFamiliesQuery_families_members[];
   onClickAddMemberListItem: () => void;
   onClickInviteMemberListItem: () => void;
 };
 
 export const MemberList: React.FC<Props> = ({
   me,
-  familyMembers,
+  members,
   onClickAddMemberListItem,
   onClickInviteMemberListItem,
 }) => {
   return (
     <>
       <List subheader={<ListSubheader component="div">自分</ListSubheader>}>
-        {me && <MemberListItem member={me.member} />}
+        {me && <MemberListItem member={me} />}
       </List>
       <List subheader={<ListSubheader component="div">メンバー</ListSubheader>}>
-        {familyMembers &&
-          familyMembers.map((familyMember) => (
-            <MemberListItem key={familyMember.member.id} member={familyMember.member} />
-          ))}
+        {members && members.map((member) => <MemberListItem key={member.id} member={member} />)}
         <AddMemberListItem onClickAddMemberListItem={onClickAddMemberListItem} />
         <InviteMemberListItem onClickInviteMemberListItem={onClickInviteMemberListItem} />
       </List>
